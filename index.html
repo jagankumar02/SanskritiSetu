@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SanskritiSetu</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- ================= SPLASH ================= -->
+<section id="splashScreen" class="screen splash-screen">
+    <div class="splash-logo">सं</div>
+    <h1>SanskritiSetu</h1>
+    <p>Connecting Youth With India's Culture</p>
+</section>
+
+
+<!-- ================= LOGIN ================= -->
+<section id="loginScreen" class="screen auth-screen hidden">
+    <div class="auth-card">
+        <div class="brand-icon">सं</div>
+
+        <h1>Welcome Back</h1>
+        <p class="auth-subtitle">Continue your cultural journey</p>
+
+        <form onsubmit="loginUser(event)">
+            <label>Email</label>
+            <input type="email" id="loginEmail" placeholder="Enter your email" required>
+
+            <label>Password</label>
+
+            <div class="password-box">
+                <input type="password" id="loginPassword" placeholder="Enter password" required>
+                <button type="button" onclick="togglePassword('loginPassword')">👁</button>
+            </div>
+
+            <button class="primary-btn" type="submit">Login</button>
+        </form>
+
+        <div class="divider"><span>OR</span></div>
+
+        <button class="google-btn" onclick="googleLogin()">Continue with Google</button>
+
+        <p class="switch-text">
+            Don't have an account?
+            <button onclick="showSignup()">Create Account</button>
+        </p>
+    </div>
+</section>
+
+
+<!-- ================= SIGNUP ================= -->
+<section id="signupScreen" class="screen auth-screen hidden">
+    <div class="auth-card">
+
+        <div class="brand-icon">सं</div>
+
+        <h1>Create Account</h1>
+        <p class="auth-subtitle">Start your cultural journey</p>
+
+        <form onsubmit="signupUser(event)">
+
+            <label>Full Name</label>
+            <input type="text" id="signupName" placeholder="Enter your name" required>
+
+            <label>Email</label>
+            <input type="email" id="signupEmail" placeholder="Enter your email" required>
+
+            <label>Password</label>
+            <input type="password" id="signupPassword" placeholder="Create password" required>
+
+            <button class="primary-btn" type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+        <p class="switch-text">
+            Already have an account?
+            <button onclick="showLogin()">Login</button>
+        </p>
+
+    </div>
+</section>
+
+
+<!-- ================= LANGUAGE ================= -->
+<section id="languageScreen" class="screen setup-screen hidden">
+
+    <div class="setup-card">
+
+        <div class="setup-icon">🌐</div>
+
+        <h1>Select Language</h1>
+        <p>Choose your preferred language</p>
+
+        <div class="language-grid">
+
+            <button class="language-card" onclick="selectLanguage(this,'English')">
+                <strong>English</strong>
+                <span>English</span>
+            </button>
+
+            <button class="language-card" onclick="selectLanguage(this,'Hindi')">
+                <strong>हिन्दी</strong>
+                <span>Hindi</span>
+            </button>
+
+            <button class="language-card" onclick="selectLanguage(this,'Bengali')">
+                <strong>বাংলা</strong>
+                <span>Bengali</span>
+            </button>
+
+            <button class="language-card" onclick="selectLanguage(this,'Tamil')">
+                <strong>தமிழ்</strong>
+                <span>Tamil</span>
+            </button>
+
+        </div>
+
+        <button class="primary-btn" onclick="continueLanguage()">
+            Continue
+        </button>
+
+    </div>
+</section>
+
+
+<!-- ================= PROFILE SETUP ================= -->
+<section id="profileScreen" class="screen setup-screen hidden">
+
+    <div class="setup-card">
+
+        <div class="setup-icon">👤</div>
+
+        <h1>Complete Your Profile</h1>
+        <p>Tell us a little about yourself</p>
+
+        <label>Full Name</label>
+        <input id="profileName" type="text" placeholder="Your name">
+
+        <label>State</label>
+        <select id="profileState">
+            <option value="">Select your state</option>
+            <option>Haryana</option>
+            <option>Uttar Pradesh</option>
+            <option>Rajasthan</option>
+            <option>Punjab</option>
+            <option>Gujarat</option>
+            <option>Maharashtra</option>
+            <option>West Bengal</option>
+            <option>Tamil Nadu</option>
+            <option>Kerala</option>
+            <option>Odisha</option>
+        </select>
+
+        <label>Your Interests</label>
+
+        <div class="interest-grid">
+
+            <button onclick="toggleInterest(this,'Arts')">🎨 Arts</button>
+            <button onclick="toggleInterest(this,'Music')">🎵 Music</button>
+            <button onclick="toggleInterest(this,'Dance')">💃 Dance</button>
+            <button onclick="toggleInterest(this,'Food')">🍛 Food</button>
+            <button onclick="toggleInterest(this,'History')">🏛️ History</button>
+            <button onclick="toggleInterest(this,'Festivals')">🎉 Festivals</button>
+
+        </div>
+
+        <button class="primary-btn" onclick="completeProfile()">
+            Continue to SanskritiSetu
+        </button>
+
+    </div>
+</section>
+
+
+<!-- ================= HOME ================= -->
+<section id="homeScreen" class="hidden">
+
+    <nav class="top-nav">
+
+        <div class="nav-brand">
+            <div class="nav-logo">सं</div>
+            <span>SanskritiSetu</span>
+        </div>
+
+        <div class="nav-actions">
+            <button>🔔</button>
+            <button onclick="showProfilePreview()">👤</button>
+        </div>
+
+    </nav>
+
+
+    <main class="home-content">
+
+        <div class="welcome-hero">
+
+            <div>
+                <p class="small-text">Namaste 👋</p>
+                <h1>Welcome, <span id="welcomeName">Explorer</span></h1>
+                <p>Discover the traditions, stories and artists of India.</p>
+            </div>
+
+            <div class="hero-symbol">🪷</div>
+
+        </div>
+
+
+        <!-- QUICK ACCESS -->
+        <section>
+
+            <div class="section-heading">
+                <div>
+                    <h2>Quick Access</h2>
+                    <p>Explore culture your way</p>
+                </div>
+            </div>
+
+            <div class="quick-grid">
+
+                <button class="quick-card artists-card" onclick="showArtistsScreen()">
+                    <div class="quick-icon">🎨</div>
+                    <h3>Artists</h3>
+                    <p>Meet India's traditional artists</p>
+                    <span>Explore →</span>
+                </button>
+
+                <button class="quick-card" onclick="openFeature('Games')">
+                    <div class="quick-icon">🎮</div>
+                    <h3>Games</h3>
+                    <p>Learn culture through fun</p>
+                    <span>Play →</span>
+                </button>
+
+                <button class="quick-card" onclick="openFeature('Cultural Map')">
+                    <div class="quick-icon">🗺️</div>
+                    <h3>Cultural Map</h3>
+                    <p>Explore India's cultural places</p>
+                    <span>Explore →</span>
+                </button>
+
+                <button class="quick-card" onclick="openFeature('AI Cultural Guide')">
+                    <div class="quick-icon">🤖</div>
+                    <h3>AI Cultural Guide</h3>
+                    <p>Ask anything about Indian culture</p>
+                    <span>Ask AI →</span>
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- EXPLORE -->
+        <section>
+
+            <div class="section-heading">
+                <div>
+                    <h2>Explore Indian Culture</h2>
+                    <p>Discover something new today</p>
+                </div>
+            </div>
+
+            <div class="culture-grid">
+
+                <button onclick="openCulture('Arts & Crafts')">
+                    <span>🎨</span>
+                    <strong>Arts & Crafts</strong>
+                </button>
+
+                <button onclick="openCulture('Festivals')">
+                    <span>🎉</span>
+                    <strong>Festivals</strong>
+                </button>
+
+                <button onclick="openCulture('Traditional Food')">
+                    <span>🍛</span>
+                    <strong>Traditional Food</strong>
+                </button>
+
+                <button onclick="openCulture('History')">
+                    <span>🏛️</span>
+                    <strong>History</strong>
+                </button>
+
+                <button onclick="openCulture('Music & Dance')">
+                    <span>🎵</span>
+                    <strong>Music & Dance</strong>
+                </button>
+
+                <button onclick="openCulture('Temples')">
+                    <span>🛕</span>
+                    <strong>Temples</strong>
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- FEATURED -->
+        <section class="featured-section">
+
+            <div class="featured-card">
+
+                <div>
+                    <span class="featured-label">FEATURED FOR YOU</span>
+
+                    <h2 id="featuredTitle">
+                        Discover Haryana's Culture
+                    </h2>
+
+                    <p id="featuredDescription">
+                        Explore the folk traditions, crafts, music and heritage of your region.
+                    </p>
+
+                    <button onclick="openFeature('Cultural Map')">
+                        Explore More →
+                    </button>
+                </div>
+
+                <div class="featured-icon">
+                    🏛️
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FESTIVALS -->
+        <section>
+
+            <div class="section-heading">
+
+                <div>
+                    <h2>Popular Festivals</h2>
+                    <p>Celebrate India's diversity</p>
+                </div>
+
+                <button onclick="openCulture('Festivals')">
+                    View All
+                </button>
+
+            </div>
+
+            <div class="festival-grid">
+
+                <div class="festival-card">
+                    <span>🎨</span>
+                    <h3>Holi</h3>
+                    <p>Festival of Colors</p>
+                </div>
+
+                <div class="festival-card">
+                    <span>🪔</span>
+                    <h3>Diwali</h3>
+                    <p>Festival of Lights</p>
+                </div>
+
+                <div class="festival-card">
+                    <span>🌾</span>
+                    <h3>Baisakhi</h3>
+                    <p>Harvest Festival</p>
+                </div>
+
+                <div class="festival-card">
+                    <span>🌴</span>
+                    <h3>Onam</h3>
+                    <p>Kerala's Harvest Festival</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- GAME BANNER -->
+        <section class="game-banner">
+
+            <div>
+                <span>🎮 CULTURAL CHALLENGE</span>
+                <h2>How well do you know India?</h2>
+                <p>Play quizzes and earn XP & badges.</p>
+                <button onclick="openFeature('Games')">
+                    Start Playing →
+                </button>
+            </div>
+
+            <div class="game-banner-icon">🏆</div>
+
+        </section>
+
+
+        <!-- FACT -->
+        <section class="daily-fact">
+
+            <span>💡 DAILY CULTURAL FACT</span>
+
+            <p>
+                India has hundreds of traditional art forms,
+                each carrying its own history and cultural story.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav">
+
+        <button class="active" onclick="showHomeScreen()">
+            <span>⌂</span>
+            Home
+        </button>
+
+        <button onclick="showArtistsScreen()">
+            <span>🎨</span>
+            Artists
+        </button>
+
+        <button onclick="openFeature('Games')">
+            <span>🎮</span>
+            Games
+        </button>
+
+        <button onclick="openFeature('Cultural Map')">
+            <span>🗺️</span>
+            Map
+        </button>
+
+        <button onclick="showProfilePreview()">
+            <span>👤</span>
+            Profile
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- ================= ARTISTS SCREEN ================= -->
+<!-- ================================================= -->
+
+<section id="artistsScreen" class="artists-screen hidden">
+
+    <nav class="artists-nav">
+
+        <button class="back-btn" onclick="showHomeScreen()">
+            ←
+        </button>
+
+        <div class="artists-brand">
+            <div class="nav-logo">सं</div>
+            <div>
+                <strong>Traditional Artists</strong>
+                <small>India's living heritage</small>
+            </div>
+        </div>
+
+        <button class="profile-small" onclick="showProfilePreview()">
+            👤
+        </button>
+
+    </nav>
+
+
+    <main class="artists-content">
+
+        <!-- ARTIST HERO -->
+        <div class="artists-hero">
+
+            <div>
+                <span class="hero-tag">🎨 LIVING HERITAGE</span>
+
+                <h1>
+                    Meet the Artists
+                    <br>
+                    Who Keep Traditions Alive
+                </h1>
+
+                <p>
+                    Discover artists, craftspeople and performers
+                    carrying India's traditional art forms forward.
+                </p>
+            </div>
+
+            <div class="artists-hero-icon">
+                🎭
+            </div>
+
+        </div>
+
+
+        <!-- SEARCH -->
+        <div class="artist-search-box">
+
+            <span>🔍</span>
+
+            <input
+                type="text"
+                id="artistSearch"
+                placeholder="Search artist, art form..."
+                oninput="filterArtists()"
+            >
+
+        </div>
+
+
+        <!-- FILTERS -->
+        <div class="artist-filters">
+
+            <select id="artistStateFilter" onchange="filterArtists()">
+
+                <option value="all">All States</option>
+
+                <option value="Haryana">Haryana</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Kerala">Kerala</option>
+
+            </select>
+
+
+            <select id="artistArtFilter" onchange="filterArtists()">
+
+                <option value="all">All Art Forms</option>
+
+                <option value="Folk Painting">Folk Painting</option>
+                <option value="Handicraft">Handicraft</option>
+                <option value="Classical Dance">Classical Dance</option>
+                <option value="Folk Music">Folk Music</option>
+                <option value="Textile Art">Textile Art</option>
+                <option value="Pottery">Pottery</option>
+
+            </select>
+
+        </div>
+
+
+        <!-- RESULT HEADER -->
+        <div class="artist-result-header">
+
+            <div>
+                <h2>Featured Artists</h2>
+                <p id="artistCount">0 artists found</p>
+            </div>
+
+        </div>
+
+
+        <!-- ARTIST GRID -->
+        <div id="artistsGrid" class="artists-grid"></div>
+
+
+        <!-- EMPTY STATE -->
+        <div id="artistEmpty" class="artist-empty hidden">
+
+            <div>🔎</div>
+
+            <h3>No artists found</h3>
+
+            <p>
+                Try changing your search or filters.
+            </p>
+
+            <button onclick="clearArtistFilters()">
+                Clear Filters
+            </button>
+
+        </div>
+
+    </main>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- ============== ARTIST DETAIL MODAL ============== -->
+<!-- ================================================= -->
+
+<div id="artistDetailModal" class="artist-detail-modal hidden">
+
+    <div class="artist-detail-card">
+
+        <button class="modal-close" onclick="closeArtistDetail()">
+            ×
+        </button>
+
+        <div class="artist-detail-top">
+
+            <div id="detailAvatar" class="detail-avatar">
+                🎨
+            </div>
+
+            <div>
+
+                <span id="detailArtForm" class="detail-tag">
+                    Art Form
+                </span>
+
+                <h2 id="detailName">
+                    Artist Name
+                </h2>
+
+                <p id="detailLocation">
+                    📍 State, India
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-stats">
+
+            <div>
+                <strong id="detailExperience">10+</strong>
+                <span>Years Experience</span>
+            </div>
+
+            <div>
+                <strong id="detailArtworks">20+</strong>
+                <span>Artworks</span>
+            </div>
+
+            <div>
+                <strong id="detailFollowers">100+</strong>
+                <span>Followers</span>
+            </div>
+
+        </div>
+
+
+        <div class="detail-about">
+
+            <h3>About the Artist</h3>
+
+            <p id="detailDescription"></p>
+
+        </div>
+
+
+        <div class="detail-story">
+
+            <h3>🌿 Cultural Story</h3>
+
+            <p id="detailStory"></p>
+
+        </div>
+
+
+        <button id="detailSaveBtn" class="save-detail-btn">
+            ♡ Save Artist
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- ================= GAMES SCREEN ================== -->
+<!-- ================================================= -->
+
+<section id="gamesScreen" class="games-screen hidden">
+
+    <!-- Games Navbar -->
+    <nav class="games-nav">
+
+        <button class="back-btn" onclick="showHomeScreen()">
+            ←
+        </button>
+
+        <div class="games-brand">
+            <div class="nav-logo">🎮</div>
+
+            <div>
+                <strong>Cultural Games</strong>
+                <small>Learn • Play • Discover</small>
+            </div>
+        </div>
+
+        <div class="xp-mini">
+            ⭐ <span id="gamesXP">0</span> XP
+        </div>
+
+    </nav>
+
+
+    <main class="games-content">
+
+        <!-- HERO -->
+        <div class="games-hero">
+
+            <div>
+
+                <span class="hero-tag">
+                    🏆 CULTURAL CHALLENGE
+                </span>
+
+                <h1>
+                    Test Your
+                    <br>
+                    Cultural Knowledge
+                </h1>
+
+                <p>
+                    Play fun quizzes, learn interesting facts
+                    and earn XP while exploring India's heritage.
+                </p>
+
+            </div>
+
+            <div class="games-hero-icon">
+                🏆
+            </div>
+
+        </div>
+
+
+        <!-- PLAYER STATS -->
+        <div class="game-stats">
+
+            <div class="game-stat-card">
+
+                <span>⭐</span>
+
+                <div>
+                    <strong id="totalXP">0</strong>
+                    <small>Total XP</small>
+                </div>
+
+            </div>
+
+
+            <div class="game-stat-card">
+
+                <span>🏆</span>
+
+                <div>
+                    <strong id="gamesPlayed">0</strong>
+                    <small>Games Played</small>
+                </div>
+
+            </div>
+
+
+            <div class="game-stat-card">
+
+                <span>🎯</span>
+
+                <div>
+                    <strong id="bestScore">0%</strong>
+                    <small>Best Score</small>
+                </div>
+
+            </div>
+
+
+            <div class="game-stat-card">
+
+                <span>🏅</span>
+
+                <div>
+                    <strong id="badgeCount">0</strong>
+                    <small>Badges</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUIZ CATEGORIES -->
+        <div class="games-section-heading">
+
+            <div>
+                <h2>Choose a Challenge</h2>
+                <p>Select a quiz and start playing</p>
+            </div>
+
+        </div>
+
+
+        <div class="quiz-grid">
+
+            <!-- Culture -->
+            <div class="quiz-card">
+
+                <div class="quiz-card-icon">
+                    🇮🇳
+                </div>
+
+                <span class="quiz-level easy">
+                    EASY
+                </span>
+
+                <h3>India & Culture</h3>
+
+                <p>
+                    Test your knowledge about India's
+                    cultural diversity.
+                </p>
+
+                <div class="quiz-meta">
+                    <span>📝 5 Questions</span>
+                    <span>⏱️ 60 sec</span>
+                </div>
+
+                <button onclick="startQuiz('culture')">
+                    Start Quiz →
+                </button>
+
+            </div>
+
+
+            <!-- Festivals -->
+            <div class="quiz-card">
+
+                <div class="quiz-card-icon">
+                    🎉
+                </div>
+
+                <span class="quiz-level easy">
+                    EASY
+                </span>
+
+                <h3>Indian Festivals</h3>
+
+                <p>
+                    How well do you know India's
+                    colourful festivals?
+                </p>
+
+                <div class="quiz-meta">
+                    <span>📝 5 Questions</span>
+                    <span>⏱️ 60 sec</span>
+                </div>
+
+                <button onclick="startQuiz('festivals')">
+                    Start Quiz →
+                </button>
+
+            </div>
+
+
+            <!-- Arts -->
+            <div class="quiz-card">
+
+                <div class="quiz-card-icon">
+                    🎨
+                </div>
+
+                <span class="quiz-level medium">
+                    MEDIUM
+                </span>
+
+                <h3>Arts & Crafts</h3>
+
+                <p>
+                    Identify India's traditional
+                    arts and crafts.
+                </p>
+
+                <div class="quiz-meta">
+                    <span>📝 5 Questions</span>
+                    <span>⏱️ 75 sec</span>
+                </div>
+
+                <button onclick="startQuiz('arts')">
+                    Start Quiz →
+                </button>
+
+            </div>
+
+
+            <!-- History -->
+            <div class="quiz-card">
+
+                <div class="quiz-card-icon">
+                    🏛️
+                </div>
+
+                <span class="quiz-level medium">
+                    MEDIUM
+                </span>
+
+                <h3>Indian Heritage</h3>
+
+                <p>
+                    Explore India's monuments,
+                    heritage and history.
+                </p>
+
+                <div class="quiz-meta">
+                    <span>📝 5 Questions</span>
+                    <span>⏱️ 75 sec</span>
+                </div>
+
+                <button onclick="startQuiz('heritage')">
+                    Start Quiz →
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- DAILY CHALLENGE -->
+
+        <div class="daily-game-card">
+
+            <div>
+
+                <span>🔥 DAILY CHALLENGE</span>
+
+                <h2>
+                    One Quiz. One New Fact.
+                </h2>
+
+                <p>
+                    Complete today's challenge and
+                    earn bonus XP.
+                </p>
+
+            </div>
+
+            <button onclick="startQuiz('daily')">
+                Play Now →
+            </button>
+
+        </div>
+
+    </main>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- ================= QUIZ SCREEN =================== -->
+<!-- ================================================= -->
+
+<section id="quizScreen" class="quiz-screen hidden">
+
+    <div class="quiz-container">
+
+        <!-- QUIZ TOP -->
+        <div class="quiz-top">
+
+            <button
+                class="quiz-back"
+                onclick="exitQuiz()"
+            >
+                ← Exit
+            </button>
+
+            <div class="quiz-progress-text">
+                Question
+                <span id="currentQuestionNumber">1</span>
+                /
+                <span id="totalQuestionNumber">5</span>
+            </div>
+
+            <div class="quiz-timer">
+                ⏱️ <span id="quizTimer">60</span>s
+            </div>
+
+        </div>
+
+
+        <!-- PROGRESS BAR -->
+        <div class="quiz-progress">
+
+            <div
+                id="quizProgressBar"
+                class="quiz-progress-fill"
+            ></div>
+
+        </div>
+
+
+        <!-- QUESTION CARD -->
+        <div class="question-card">
+
+            <span id="questionCategory" class="question-category">
+                CULTURE
+            </span>
+
+            <h1 id="questionText">
+                Question goes here?
+            </h1>
+
+
+            <div
+                id="questionOptions"
+                class="question-options"
+            >
+            </div>
+
+
+            <div class="question-bottom">
+
+                <span id="questionHint">
+                    Choose the correct answer
+                </span>
+
+                <button
+                    id="nextQuestionBtn"
+                    onclick="nextQuestion()"
+                    disabled
+                >
+                    Next →
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- ================= RESULT SCREEN ================= -->
+<!-- ================================================= -->
+
+<section id="resultScreen" class="result-screen hidden">
+
+    <div class="result-card">
+
+        <div class="result-trophy">
+            🏆
+        </div>
+
+        <span class="result-label">
+            QUIZ COMPLETED
+        </span>
+
+        <h1 id="resultTitle">
+            Great Job!
+        </h1>
+
+        <p id="resultMessage">
+            You completed the challenge.
+        </p>
+
+
+        <!-- SCORE -->
+        <div class="result-score">
+
+            <strong id="finalPercentage">
+                0%
+            </strong>
+
+            <span>
+                Your Score
+            </span>
+
+        </div>
+
+
+        <!-- RESULT STATS -->
+        <div class="result-stats">
+
+            <div>
+                <strong id="correctAnswers">
+                    0
+                </strong>
+
+                <span>
+                    Correct
+                </span>
+            </div>
+
+
+            <div>
+                <strong id="wrongAnswers">
+                    0
+                </strong>
+
+                <span>
+                    Wrong
+                </span>
+            </div>
+
+
+            <div>
+                <strong id="earnedXP">
+                    +0
+                </strong>
+
+                <span>
+                    XP Earned
+                </span>
+            </div>
+
+        </div>
+
+
+        <!-- BADGE -->
+        <div
+            id="resultBadge"
+            class="result-badge"
+        >
+            🎖️
+            <span>Culture Explorer</span>
+        </div>
+
+
+        <div class="result-actions">
+
+            <button
+                class="primary-btn"
+                onclick="restartCurrentQuiz()"
+            >
+                Play Again
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="showGamesScreen()"
+            >
+                Back to Games
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================================================= -->
+<!-- ============== CULTURAL MAP SCREEN ============== -->
+<!-- ================================================= -->
+
+<section id="culturalMapScreen" class="cultural-map-screen hidden">
+
+    <!-- MAP NAVBAR -->
+    <nav class="cultural-map-nav">
+
+        <button class="back-btn" onclick="showHomeScreen()">
+            ←
+        </button>
+
+        <div class="cultural-map-brand">
+
+            <div class="nav-logo">
+                🗺️
+            </div>
+
+            <div>
+                <strong>Cultural Map</strong>
+                <small>Explore India's cultural diversity</small>
+            </div>
+
+        </div>
+
+        <button
+            class="profile-small"
+            onclick="showProfilePreview()"
+        >
+            👤
+        </button>
+
+    </nav>
+
+
+    <main class="cultural-map-content">
+
+        <!-- HERO -->
+        <div class="cultural-map-hero">
+
+            <div>
+
+                <span class="hero-tag">
+                    🇮🇳 EXPLORE INDIA
+                </span>
+
+                <h1>
+                    Discover Culture
+                    <br>
+                    Across India
+                </h1>
+
+                <p>
+                    Select a state and explore its traditions,
+                    festivals, food, arts and heritage.
+                </p>
+
+            </div>
+
+            <div class="cultural-map-hero-icon">
+                🗺️
+            </div>
+
+        </div>
+
+
+        <!-- SEARCH -->
+        <div class="culture-map-search">
+
+            <span>🔍</span>
+
+            <input
+                type="text"
+                id="cultureStateSearch"
+                placeholder="Search state or culture..."
+                oninput="filterCultureStates()"
+            >
+
+        </div>
+
+
+        <!-- CATEGORY FILTER -->
+        <div class="culture-category-row">
+
+            <button
+                class="culture-category active"
+                onclick="filterCultureCategory('all', this)"
+            >
+                🌏 All
+            </button>
+
+            <button
+                class="culture-category"
+                onclick="filterCultureCategory('arts', this)"
+            >
+                🎨 Arts
+            </button>
+
+            <button
+                class="culture-category"
+                onclick="filterCultureCategory('food', this)"
+            >
+                🍛 Food
+            </button>
+
+            <button
+                class="culture-category"
+                onclick="filterCultureCategory('festivals', this)"
+            >
+                🎉 Festivals
+            </button>
+
+            <button
+                class="culture-category"
+                onclick="filterCultureCategory('heritage', this)"
+            >
+                🏛️ Heritage
+            </button>
+
+        </div>
+
+
+        <!-- SECTION HEADING -->
+        <div class="culture-map-heading">
+
+            <div>
+                <h2>Explore by State</h2>
+
+                <p id="cultureStateCount">
+                    10 states available
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- STATE GRID -->
+        <div
+            id="cultureStateGrid"
+            class="culture-state-grid"
+        >
+        </div>
+
+
+        <!-- EMPTY -->
+        <div
+            id="cultureStateEmpty"
+            class="culture-state-empty hidden"
+        >
+
+            <div>🔎</div>
+
+            <h3>No culture found</h3>
+
+            <p>
+                Try searching for another state or category.
+            </p>
+
+        </div>
+
+    </main>
+
+</section>
+
+
+
+
+<!-- ================================================= -->
+<!-- =========== CULTURAL DETAIL MODAL =============== -->
+<!-- ================================================= -->
+
+<div
+    id="cultureDetailModal"
+    class="culture-detail-modal hidden"
+>
+
+    <div class="culture-detail-card">
+
+        <button
+            class="modal-close"
+            onclick="closeCultureDetail()"
+        >
+            ×
+        </button>
+
+
+        <!-- HEADER -->
+        <div class="culture-detail-header">
+
+            <div
+                id="cultureDetailIcon"
+                class="culture-detail-icon"
+            >
+                🇮🇳
+            </div>
+
+            <div>
+
+                <span
+                    id="cultureDetailRegion"
+                    class="detail-tag"
+                >
+                    INDIA
+                </span>
+
+                <h2 id="cultureDetailName">
+                    Haryana
+                </h2>
+
+                <p id="cultureDetailTagline">
+                    Land of vibrant traditions
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+        <div class="culture-detail-about">
+
+            <h3>🌿 About the Culture</h3>
+
+            <p id="cultureDetailDescription">
+                Explore the traditions and heritage of this region.
+            </p>
+
+        </div>
+
+
+        <!-- CULTURAL ITEMS -->
+        <div class="culture-detail-grid">
+
+            <div class="culture-info-box">
+
+                <span>🎨</span>
+
+                <h4>Arts & Crafts</h4>
+
+                <p id="cultureArts">
+                    Traditional arts
+                </p>
+
+            </div>
+
+
+            <div class="culture-info-box">
+
+                <span>🍛</span>
+
+                <h4>Traditional Food</h4>
+
+                <p id="cultureFood">
+                    Traditional dishes
+                </p>
+
+            </div>
+
+
+            <div class="culture-info-box">
+
+                <span>🎉</span>
+
+                <h4>Festivals</h4>
+
+                <p id="cultureFestivals">
+                    Cultural festivals
+                </p>
+
+            </div>
+
+
+            <div class="culture-info-box">
+
+                <span>🏛️</span>
+
+                <h4>Heritage</h4>
+
+                <p id="cultureHeritage">
+                    Heritage places
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- CULTURAL STORY -->
+        <div class="culture-story-box">
+
+            <h3>📖 Cultural Story</h3>
+
+            <p id="cultureStory">
+                Discover the cultural story of this region.
+            </p>
+
+        </div>
+
+
+        <button
+            class="primary-btn"
+            onclick="closeCultureDetail()"
+        >
+            Continue Exploring
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ================= FEATURE MODAL ================= -->
+
+<div id="featureModal" class="modal hidden">
+
+    <div class="modal-card">
+
+        <button class="modal-close" onclick="closeModal()">×</button>
+
+        <div id="modalIcon" class="modal-icon">✨</div>
+
+        <h2 id="modalTitle">Feature</h2>
+
+        <p id="modalText">
+            This feature is coming soon.
+        </p>
+
+        <button class="primary-btn" onclick="closeModal()">
+            Got it
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
