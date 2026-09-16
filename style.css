@@ -2319,3 +2319,344 @@ button {
 
 }
 
+/* ============================================================
+   SANSKRITISETU — MODERN DASHBOARD UI OVERRIDE
+   Design only: existing HTML, classes, IDs and JS are untouched.
+   ============================================================ */
+
+:root {
+  --ss-bg: #f7f8fc;
+  --ss-surface: #ffffff;
+  --ss-surface-2: #f5f6ff;
+  --ss-text: #1f2340;
+  --ss-muted: #7b8097;
+  --ss-border: #e9eaf3;
+  --ss-primary: #6557e8;
+  --ss-primary-dark: #5144d4;
+  --ss-primary-soft: #eeecff;
+  --ss-teal: #18b6a4;
+  --ss-shadow: 0 10px 30px rgba(38, 42, 90, .07);
+  --ss-shadow-hover: 0 18px 42px rgba(38, 42, 90, .12);
+  --ss-radius: 22px;
+  --ss-radius-sm: 15px;
+}
+
+/* Global visual reset */
+html { scroll-behavior: smooth; }
+
+body {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(101,87,232,.055), transparent 28%),
+    radial-gradient(circle at 100% 18%, rgba(24,182,164,.035), transparent 24%),
+    var(--ss-bg) !important;
+  color: var(--ss-text) !important;
+  font-family: "Plus Jakarta Sans", Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+button, input, select, textarea {
+  font-family: inherit !important;
+}
+
+button {
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease !important;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+::selection {
+  background: rgba(101,87,232,.18);
+  color: var(--ss-text);
+}
+
+/* App / dashboard surfaces */
+#app, .app, .dashboard, .main-content, .content-area {
+  background: transparent !important;
+}
+
+/* Sidebar */
+.sidebar, .side-bar, aside {
+  background: rgba(255,255,255,.94) !important;
+  border-right: 1px solid var(--ss-border) !important;
+  box-shadow: 8px 0 30px rgba(31,35,64,.035) !important;
+  backdrop-filter: blur(16px);
+}
+
+.sidebar a, .sidebar button, .nav-item {
+  border-radius: 14px !important;
+  color: var(--ss-muted) !important;
+}
+
+.sidebar a:hover, .sidebar button:hover, .nav-item:hover,
+.sidebar .active, .sidebar a.active, .nav-item.active {
+  color: var(--ss-primary) !important;
+  background: var(--ss-primary-soft) !important;
+}
+
+/* Header / top navigation */
+header, .header, .topbar, .top-bar, .navbar {
+  background: rgba(255,255,255,.88) !important;
+  border-bottom: 1px solid var(--ss-border) !important;
+  backdrop-filter: blur(18px);
+}
+
+.logo, .brand, .site-title {
+  font-weight: 800 !important;
+  letter-spacing: -.04em;
+}
+
+/* Main cards */
+.card, .dashboard-card, .stat-card, .feature-card, .content-card,
+.quiz-card, .artist-card, .culture-card, .game-card, .info-card,
+section.card {
+  background: var(--ss-surface) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: var(--ss-radius) !important;
+  box-shadow: var(--ss-shadow) !important;
+}
+
+.card:hover, .dashboard-card:hover, .feature-card:hover, .culture-card:hover,
+.artist-card:hover, .game-card:hover, .quiz-card:hover {
+  box-shadow: var(--ss-shadow-hover) !important;
+  transform: translateY(-3px);
+}
+
+/* Welcome / hero area */
+.hero, .welcome, .welcome-section, .hero-section, .dashboard-hero {
+  background:
+    linear-gradient(135deg, #ffffff 0%, #f5f3ff 62%, #f0fffc 100%) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: 28px !important;
+  box-shadow: var(--ss-shadow) !important;
+  overflow: hidden;
+}
+
+.hero h1, .welcome h1, .welcome-section h1, .hero-section h1 {
+  color: var(--ss-text) !important;
+  letter-spacing: -.045em !important;
+}
+
+.hero p, .welcome p, .welcome-section p {
+  color: var(--ss-muted) !important;
+}
+
+/* Primary actions */
+.btn-primary, .primary-btn, .primary-button,
+button.primary, .cta, .submit-btn {
+  background: linear-gradient(135deg, var(--ss-primary), #786cff) !important;
+  border: 0 !important;
+  color: #fff !important;
+  border-radius: 13px !important;
+  box-shadow: 0 8px 18px rgba(101,87,232,.22) !important;
+}
+
+.btn-primary:hover, .primary-btn:hover, .primary-button:hover,
+button.primary:hover, .cta:hover, .submit-btn:hover {
+  background: linear-gradient(135deg, var(--ss-primary-dark), var(--ss-primary)) !important;
+  box-shadow: 0 12px 24px rgba(101,87,232,.28) !important;
+}
+
+/* Secondary buttons */
+.btn-secondary, .secondary-btn, .secondary-button,
+button.secondary {
+  background: #fff !important;
+  color: var(--ss-text) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: 13px !important;
+}
+
+/* Inputs */
+input, select, textarea {
+  background: #fff !important;
+  color: var(--ss-text) !important;
+  border: 1px solid #e2e4ee !important;
+  border-radius: 13px !important;
+  box-shadow: 0 2px 8px rgba(31,35,64,.025) !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none !important;
+  border-color: rgba(101,87,232,.55) !important;
+  box-shadow: 0 0 0 4px rgba(101,87,232,.10) !important;
+}
+
+/* Stat numbers */
+.stat-card h2, .stat-card h3, .stat-value, .number,
+.stats .value {
+  color: var(--ss-text) !important;
+  font-weight: 800 !important;
+  letter-spacing: -.045em !important;
+}
+
+/* Accent icons / icon boxes */
+.icon-box, .feature-icon, .stat-icon, .quick-icon,
+.icon-container {
+  background: var(--ss-primary-soft) !important;
+  color: var(--ss-primary) !important;
+  border-radius: 15px !important;
+}
+
+/* Quick access / feature tiles */
+.quick-card, .quick-access-card, .feature-tile, .shortcut-card {
+  background: #fff !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 7px 22px rgba(31,35,64,.055) !important;
+}
+
+.quick-card:hover, .quick-access-card:hover, .feature-tile:hover, .shortcut-card:hover {
+  border-color: rgba(101,87,232,.22) !important;
+  box-shadow: 0 16px 34px rgba(31,35,64,.10) !important;
+}
+
+/* Tags / badges */
+.badge, .tag, .chip, .pill {
+  background: var(--ss-primary-soft) !important;
+  color: var(--ss-primary) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+}
+
+/* Progress bars */
+.progress, .progress-track {
+  background: #ececf5 !important;
+  border-radius: 999px !important;
+  overflow: hidden;
+}
+
+.progress-bar, .progress-fill {
+  background: linear-gradient(90deg, var(--ss-primary), #8a7fff) !important;
+  border-radius: 999px !important;
+}
+
+/* Culture / artist imagery */
+.card img, .culture-card img, .artist-card img, .feature-card img,
+.game-card img {
+  border-radius: 17px !important;
+}
+
+/* Tables / lists */
+table {
+  background: #fff !important;
+  border-radius: 18px !important;
+  overflow: hidden;
+  border: 1px solid var(--ss-border) !important;
+}
+
+th {
+  background: #f7f7fc !important;
+  color: var(--ss-muted) !important;
+  font-size: .78rem !important;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+td, th {
+  border-color: var(--ss-border) !important;
+}
+
+/* Modals */
+.modal, .modal-content, .dialog, .popup {
+  border: 1px solid var(--ss-border) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 24px 70px rgba(24,27,62,.22) !important;
+}
+
+/* Toast / notifications */
+.toast, .notification, .alert {
+  border-radius: 16px !important;
+  border: 1px solid var(--ss-border) !important;
+  box-shadow: 0 14px 35px rgba(31,35,64,.12) !important;
+}
+
+/* Login / setup screens */
+.login-card, .auth-card, .signup-card, .setup-card,
+.auth-container .card, .login-container .card {
+  background: rgba(255,255,255,.96) !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: 26px !important;
+  box-shadow: 0 24px 65px rgba(31,35,64,.10) !important;
+}
+
+.auth-container, .login-container, .setup-container {
+  background:
+    radial-gradient(circle at 15% 15%, rgba(101,87,232,.12), transparent 30%),
+    radial-gradient(circle at 90% 85%, rgba(24,182,164,.09), transparent 30%),
+    var(--ss-bg) !important;
+}
+
+/* Splash */
+.splash-screen, #splash-screen {
+  background: linear-gradient(145deg, #f7f7ff, #ffffff) !important;
+}
+
+/* Game / quiz area */
+.quiz-option, .option, .answer-option {
+  background: #fff !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: 15px !important;
+}
+
+.quiz-option:hover, .option:hover, .answer-option:hover,
+.quiz-option.selected, .option.selected, .answer-option.selected {
+  border-color: rgba(101,87,232,.45) !important;
+  background: var(--ss-primary-soft) !important;
+}
+
+/* Charts */
+.chart-container, .chart-card {
+  background: #fff !important;
+  border: 1px solid var(--ss-border) !important;
+  border-radius: 22px !important;
+  box-shadow: var(--ss-shadow) !important;
+}
+
+/* Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c9c8dd transparent;
+}
+
+*::-webkit-scrollbar { width: 7px; height: 7px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: #c9c8dd;
+  border-radius: 999px;
+}
+
+/* Mobile bottom navigation */
+.bottom-nav, .mobile-nav {
+  background: rgba(255,255,255,.94) !important;
+  border-top: 1px solid var(--ss-border) !important;
+  box-shadow: 0 -8px 28px rgba(31,35,64,.07) !important;
+  backdrop-filter: blur(18px);
+}
+
+.bottom-nav .active, .mobile-nav .active {
+  color: var(--ss-primary) !important;
+}
+
+/* Responsive polish */
+@media (max-width: 900px) {
+  .card, .dashboard-card, .feature-card, .culture-card,
+  .artist-card, .game-card, .quiz-card {
+    border-radius: 18px !important;
+  }
+
+  .hero, .welcome, .welcome-section, .hero-section, .dashboard-hero {
+    border-radius: 22px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero, .welcome, .welcome-section, .hero-section, .dashboard-hero {
+    border-radius: 19px !important;
+  }
+
+  .card, .dashboard-card, .feature-card, .culture-card,
+  .artist-card, .game-card, .quiz-card {
+    border-radius: 16px !important;
+  }
+}
