@@ -1,0 +1,5054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SanskritiSetu</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --deep: #472836;
+            --deep-2: #5d3445;
+
+            --teal: #4059AD;
+            --blue: #6B9AC4;
+            --mint: #97D8C4;
+            --gold: #F4B942;
+
+            --cream: #fffaf0;
+            --cream-2: #f8f1e5;
+
+            --white: #ffffff;
+            --text: #28202a;
+            --muted: #756a72;
+
+            --border: rgba(71, 40, 54, 0.11);
+            --shadow: 0 20px 60px rgba(71, 40, 54, 0.10);
+            --shadow-soft: 0 10px 30px rgba(71, 40, 54, 0.07);
+
+            --sidebar-width: 255px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(151,216,196,0.18), transparent 25%),
+                radial-gradient(circle at 90% 20%, rgba(244,185,66,0.12), transparent 25%),
+                linear-gradient(135deg, #fffaf0 0%, #f8f1e5 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--cream);
+            transition: opacity .35s ease, visibility .35s ease;
+        }
+
+        .loading-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-box {
+            text-align: center;
+        }
+
+        .loading-logo {
+            width: 75px;
+            height: 75px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+            background: linear-gradient(135deg, var(--deep), var(--teal));
+            color: white;
+            font-size: 34px;
+            font-weight: 800;
+            box-shadow: 0 20px 50px rgba(71,40,54,.25);
+        }
+
+        .loading-box p {
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .loader {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(64,89,173,.15);
+            border-top-color: var(--teal);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+            margin: 18px auto 0;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================
+           APP
+        ========================= */
+
+        .app {
+            min-height: 100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            position: fixed;
+            left: 18px;
+            top: 18px;
+            bottom: 18px;
+            width: var(--sidebar-width);
+
+            padding: 20px 14px;
+
+            background: rgba(255,255,255,.62);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+
+            border: 1px solid rgba(255,255,255,.75);
+            border-radius: 28px;
+
+            box-shadow: var(--shadow);
+
+            z-index: 1000;
+
+            display: flex;
+            flex-direction: column;
+
+            transition: transform .3s ease;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 4px 8px 22px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: linear-gradient(135deg, var(--deep), var(--teal));
+            color: white;
+
+            font-size: 21px;
+            font-weight: 800;
+
+            box-shadow: 0 12px 25px rgba(71,40,54,.18);
+        }
+
+        .brand-text h2 {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--deep);
+        }
+
+        .brand-text span {
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .nav-label {
+            padding: 10px 10px 7px;
+            font-size: 10px;
+            font-weight: 800;
+            color: #a0969c;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            padding-right: 3px;
+        }
+
+        .nav::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .nav::-webkit-scrollbar-thumb {
+            background: rgba(71,40,54,.12);
+            border-radius: 20px;
+        }
+
+        .nav-item {
+            width: 100%;
+            padding: 11px 12px;
+
+            display: flex;
+            align-items: center;
+            gap: 11px;
+
+            border-radius: 13px;
+
+            color: #62565e;
+            background: transparent;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            text-align: left;
+
+            transition: all .22s ease;
+        }
+
+        .nav-item i {
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .nav-item:hover {
+            color: var(--deep);
+            background: rgba(255,255,255,.72);
+            transform: translateX(2px);
+        }
+
+        .nav-item.active {
+            color: white;
+            background: linear-gradient(135deg, var(--deep), var(--teal));
+            box-shadow: 0 9px 25px rgba(64,89,173,.20);
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 15px;
+        }
+
+        .mini-profile {
+            padding: 11px;
+            border-radius: 17px;
+            background: rgba(255,255,255,.62);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 13px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: linear-gradient(135deg, var(--mint), var(--blue));
+            color: var(--deep);
+            font-weight: 800;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .mini-profile-info {
+            min-width: 0;
+        }
+
+        .mini-profile-info strong {
+            display: block;
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mini-profile-info span {
+            display: block;
+            color: var(--muted);
+            font-size: 9px;
+            margin-top: 2px;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: calc(var(--sidebar-width) + 36px);
+            padding: 18px 22px 40px 0;
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 66px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 18px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .mobile-menu {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            background: rgba(255,255,255,.7);
+            border: 1px solid var(--border);
+            color: var(--deep);
+        }
+
+        .page-heading h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--deep);
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .icon-btn {
+            width: 41px;
+            height: 41px;
+            border-radius: 13px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(255,255,255,.68);
+            border: 1px solid var(--border);
+            color: var(--deep);
+
+            transition: .2s ease;
+        }
+
+        .icon-btn:hover {
+            transform: translateY(-2px);
+            background: white;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .top-profile {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 4px 10px 4px 4px;
+
+            background: rgba(255,255,255,.65);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+
+            cursor: pointer;
+        }
+
+        .top-profile .avatar {
+            width: 33px;
+            height: 33px;
+            border-radius: 10px;
+        }
+
+        .top-profile-text strong {
+            display: block;
+            font-size: 10px;
+        }
+
+        .top-profile-text span {
+            font-size: 9px;
+            color: var(--muted);
+        }
+
+        /* =========================
+           CONTENT
+        ========================= */
+
+        #pageContent {
+            animation: pageIn .25s ease;
+        }
+
+        @keyframes pageIn {
+            from {
+                opacity: 0;
+                transform: translateY(7px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            min-height: 270px;
+            border-radius: 27px;
+
+            position: relative;
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+
+            padding: 35px;
+
+            background:
+                linear-gradient(90deg, rgba(45,24,35,.91), rgba(71,40,54,.67), rgba(71,40,54,.20)),
+                url("https://images.unsplash.com/photo-1605640840605-14ac1855827b?auto=format&fit=crop&w=1600&q=85");
+
+            background-size: cover;
+            background-position: center;
+
+            box-shadow: var(--shadow);
+        }
+
+        .hero-content {
+            max-width: 650px;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+
+            padding: 7px 11px;
+            border-radius: 30px;
+
+            background: rgba(255,255,255,.13);
+            border: 1px solid rgba(255,255,255,.2);
+
+            font-size: 10px;
+            font-weight: 700;
+
+            margin-bottom: 14px;
+        }
+
+        .hero h2 {
+            font-size: clamp(27px, 4vw, 43px);
+            line-height: 1.08;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .hero p {
+            font-size: 12px;
+            line-height: 1.7;
+            color: rgba(255,255,255,.82);
+            margin-top: 13px;
+            max-width: 570px;
+        }
+
+        .hero-location {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: rgba(255,255,255,.75);
+        }
+
+        .hero-location i {
+            width: 14px;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .primary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+
+            padding: 11px 16px;
+
+            border-radius: 12px;
+
+            background: linear-gradient(135deg, var(--deep), var(--teal));
+            color: white;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            box-shadow: 0 10px 25px rgba(64,89,173,.18);
+
+            transition: .2s ease;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(64,89,173,.25);
+        }
+
+        .secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+
+            padding: 10px 14px;
+
+            border-radius: 11px;
+
+            background: rgba(255,255,255,.72);
+            border: 1px solid var(--border);
+
+            color: var(--deep);
+
+            font-size: 10px;
+            font-weight: 700;
+
+            transition: .2s ease;
+        }
+
+        .secondary-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 13px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            padding: 18px;
+            border-radius: 19px;
+
+            background: rgba(255,255,255,.62);
+            border: 1px solid rgba(255,255,255,.75);
+
+            box-shadow: var(--shadow-soft);
+
+            transition: .22s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 11px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(151,216,196,.25);
+            color: var(--deep);
+        }
+
+        .stat-icon i {
+            width: 17px;
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            background: rgba(107,154,196,.18);
+        }
+
+        .stat-card:nth-child(3) .stat-icon {
+            background: rgba(244,185,66,.18);
+        }
+
+        .stat-card:nth-child(4) .stat-icon {
+            background: rgba(64,89,173,.12);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--deep);
+            margin-top: 11px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 9px;
+            margin-top: 2px;
+        }
+
+        /* =========================
+           SECTION HEAD
+        ========================= */
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 27px 2px 13px;
+        }
+
+        .section-head h3 {
+            font-size: 16px;
+            color: var(--deep);
+            font-weight: 800;
+        }
+
+        .section-head span {
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        /* =========================
+           EXPLORE
+        ========================= */
+
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 13px;
+        }
+
+        .explore-card {
+            position: relative;
+            overflow: hidden;
+            min-height: 175px;
+
+            border-radius: 20px;
+
+            cursor: pointer;
+
+            background-size: cover;
+            background-position: center;
+
+            box-shadow: var(--shadow-soft);
+
+            transition: .25s ease;
+        }
+
+        .explore-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .explore-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 15%, rgba(40,20,30,.9));
+        }
+
+        .explore-info {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            z-index: 2;
+            color: white;
+        }
+
+        .explore-info .small {
+            font-size: 8px;
+            opacity: .72;
+            text-transform: uppercase;
+            letter-spacing: .7px;
+        }
+
+        .explore-info h4 {
+            font-size: 14px;
+            margin-top: 3px;
+        }
+
+        .explore-info p {
+            font-size: 9px;
+            opacity: .76;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        /* =========================
+           LOWER GRID
+        ========================= */
+
+        .two-grid {
+            display: grid;
+            grid-template-columns: 1.35fr .9fr;
+            gap: 14px;
+            margin-top: 15px;
+        }
+
+        .glass-card {
+            border-radius: 20px;
+            background: rgba(255,255,255,.63);
+            border: 1px solid rgba(255,255,255,.75);
+            box-shadow: var(--shadow-soft);
+            padding: 20px;
+        }
+
+        .discovery {
+            min-height: 220px;
+
+            background:
+                linear-gradient(90deg, rgba(71,40,54,.96), rgba(71,40,54,.70)),
+                url("https://images.unsplash.com/photo-1532375810709-75b1da00537c?auto=format&fit=crop&w=1200&q=80");
+
+            background-size: cover;
+            background-position: center;
+
+            color: white;
+        }
+
+        .discovery .label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: .7;
+        }
+
+        .discovery h3 {
+            font-size: 22px;
+            margin-top: 9px;
+            max-width: 500px;
+        }
+
+        .discovery p {
+            font-size: 10px;
+            line-height: 1.7;
+            opacity: .78;
+            margin-top: 10px;
+            max-width: 570px;
+        }
+
+        .discovery .secondary-btn {
+            margin-top: 17px;
+            background: rgba(255,255,255,.12);
+            border-color: rgba(255,255,255,.2);
+            color: white;
+        }
+
+        .profile-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-head .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+        }
+
+        .profile-head h3 {
+            font-size: 14px;
+        }
+
+        .profile-head p {
+            font-size: 9px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .detail {
+            padding: 10px;
+            border-radius: 12px;
+            background: rgba(255,255,255,.56);
+            border: 1px solid var(--border);
+        }
+
+        .detail span {
+            display: block;
+            font-size: 8px;
+            color: var(--muted);
+        }
+
+        .detail strong {
+            display: block;
+            font-size: 10px;
+            margin-top: 4px;
+            color: var(--deep);
+            word-break: break-word;
+        }
+
+        /* =========================
+           PAGE COMMON
+        ========================= */
+
+        .page-title-card {
+            padding: 25px;
+            border-radius: 23px;
+
+            background:
+                radial-gradient(circle at 90% 10%, rgba(151,216,196,.28), transparent 30%),
+                rgba(255,255,255,.65);
+
+            border: 1px solid rgba(255,255,255,.75);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .page-title-card .eyebrow {
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--teal);
+        }
+
+        .page-title-card h2 {
+            color: var(--deep);
+            font-size: 27px;
+            margin-top: 6px;
+        }
+
+        .page-title-card p {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+            max-width: 750px;
+            margin-top: 7px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 15px;
+        }
+
+        /* =========================
+           ARTISTS
+        ========================= */
+
+        .artist-card {
+            overflow: hidden;
+            border-radius: 19px;
+            background: rgba(255,255,255,.68);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-soft);
+            transition: .22s ease;
+        }
+
+        .artist-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .artist-image {
+            height: 165px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .artist-body {
+            padding: 16px;
+        }
+
+        .artist-tag {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 20px;
+            background: rgba(151,216,196,.23);
+            color: var(--deep);
+            font-size: 8px;
+            font-weight: 800;
+        }
+
+        .artist-body h3 {
+            font-size: 14px;
+            margin-top: 9px;
+            color: var(--deep);
+        }
+
+        .artist-body p {
+            color: var(--muted);
+            font-size: 9px;
+            line-height: 1.65;
+            margin-top: 6px;
+        }
+
+        .artist-footer {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .artist-footer span {
+            font-size: 8px;
+            color: var(--muted);
+        }
+
+        /* =========================
+           GAMES
+        ========================= */
+
+        .game-card {
+            padding: 21px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.68);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-soft);
+            transition: .22s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .game-icon {
+            width: 47px;
+            height: 47px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(151,216,196,.5), rgba(107,154,196,.25));
+            color: var(--deep);
+        }
+
+        .game-icon i {
+            width: 22px;
+        }
+
+        .game-card h3 {
+            font-size: 14px;
+            color: var(--deep);
+            margin-top: 14px;
+        }
+
+        .game-card p {
+            font-size: 9px;
+            line-height: 1.65;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        .game-meta {
+            display: flex;
+            gap: 7px;
+            margin-top: 13px;
+        }
+
+        .pill {
+            padding: 5px 8px;
+            border-radius: 20px;
+            background: rgba(71,40,54,.06);
+            font-size: 8px;
+            color: var(--muted);
+        }
+
+        .game-card .primary-btn {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        /* =========================
+           MAP
+        ========================= */
+
+        .map-layout {
+            display: grid;
+            grid-template-columns: .85fr 1.6fr;
+            gap: 14px;
+            margin-top: 15px;
+        }
+
+        .map-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .place-item {
+            padding: 13px;
+            border-radius: 15px;
+            background: rgba(255,255,255,.65);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .place-item:hover,
+        .place-item.selected {
+            background: white;
+            border-color: rgba(64,89,173,.25);
+            transform: translateX(3px);
+        }
+
+        .place-item-top {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .place-icon {
+            width: 33px;
+            height: 33px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(244,185,66,.17);
+            color: var(--deep);
+            flex-shrink: 0;
+        }
+
+        .place-item h4 {
+            font-size: 10px;
+            color: var(--deep);
+        }
+
+        .place-item p {
+            font-size: 8px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        .map-box {
+            min-height: 500px;
+            overflow: hidden;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: #e9e3d8;
+            position: relative;
+        }
+
+        .map-box iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            border: 0;
+        }
+
+        .map-info {
+            position: absolute;
+            left: 14px;
+            bottom: 14px;
+            z-index: 2;
+            max-width: 260px;
+            padding: 13px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.87);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,.8);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .map-info h4 {
+            font-size: 11px;
+            color: var(--deep);
+        }
+
+        .map-info p {
+            font-size: 8px;
+            line-height: 1.5;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* =========================
+           AI CULTURE
+        ========================= */
+
+        .ai-layout {
+            display: grid;
+            grid-template-columns: .75fr 1.5fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .ai-side {
+            padding: 22px;
+            border-radius: 21px;
+
+            color: white;
+
+            background:
+                linear-gradient(145deg, rgba(71,40,54,.98), rgba(64,89,173,.93));
+            box-shadow: var(--shadow);
+        }
+
+        .ai-orb {
+            width: 60px;
+            height: 60px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.13);
+            border: 1px solid rgba(255,255,255,.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ai-orb i {
+            width: 28px;
+        }
+
+        .ai-side h3 {
+            font-size: 19px;
+            margin-top: 18px;
+        }
+
+        .ai-side p {
+            font-size: 9px;
+            line-height: 1.7;
+            color: rgba(255,255,255,.75);
+            margin-top: 8px;
+        }
+
+        .ai-feature-list {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .ai-feature {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 9px;
+            color: rgba(255,255,255,.82);
+        }
+
+        .ai-feature i {
+            width: 13px;
+            color: var(--mint);
+        }
+
+        .ai-chat {
+            min-height: 480px;
+            border-radius: 21px;
+
+            background: rgba(255,255,255,.67);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-soft);
+
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 15px 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 11px;
+            background: linear-gradient(135deg, var(--mint), var(--blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--deep);
+        }
+
+        .chat-header h4 {
+            font-size: 11px;
+        }
+
+        .chat-header span {
+            display: block;
+            color: #4d9b77;
+            font-size: 8px;
+            margin-top: 2px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 17px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+            min-height: 310px;
+            max-height: 360px;
+        }
+
+        .message {
+            max-width: 78%;
+            padding: 11px 13px;
+            border-radius: 14px;
+            font-size: 9px;
+            line-height: 1.65;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background: rgba(151,216,196,.18);
+            color: var(--text);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--deep);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .suggestions {
+            display: flex;
+            gap: 6px;
+            padding: 0 17px 12px;
+            overflow-x: auto;
+        }
+
+        .suggestion {
+            white-space: nowrap;
+            padding: 7px 9px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.8);
+            border: 1px solid var(--border);
+            color: var(--deep);
+            font-size: 8px;
+            cursor: pointer;
+        }
+
+        .suggestion:hover {
+            background: rgba(151,216,196,.25);
+        }
+
+        .chat-input {
+            padding: 12px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 7px;
+        }
+
+        .chat-input textarea {
+            flex: 1;
+            resize: none;
+            height: 42px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,.8);
+            padding: 11px;
+            font-size: 9px;
+            outline: none;
+        }
+
+        .chat-input textarea:focus {
+            border-color: rgba(64,89,173,.4);
+        }
+
+        .send-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--deep);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* =========================
+           LEARNING
+        ========================= */
+
+        .learning-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 15px;
+        }
+
+        .learning-card {
+            padding: 20px;
+            border-radius: 19px;
+            background: rgba(255,255,255,.68);
+            border: 1px solid var(--border);
+        }
+
+        .learning-card h3 {
+            font-size: 14px;
+            color: var(--deep);
+        }
+
+        .learning-card p {
+            color: var(--muted);
+            font-size: 9px;
+            margin-top: 5px;
+        }
+
+        .progress-line {
+            height: 7px;
+            border-radius: 20px;
+            background: rgba(71,40,54,.08);
+            overflow: hidden;
+            margin-top: 14px;
+        }
+
+        .progress-line span {
+            display: block;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--mint), var(--teal));
+            border-radius: inherit;
+        }
+
+        /* =========================
+           BADGES
+        ========================= */
+
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 13px;
+            margin-top: 15px;
+        }
+
+        .badge-card {
+            text-align: center;
+            padding: 22px 15px;
+            border-radius: 19px;
+            background: rgba(255,255,255,.68);
+            border: 1px solid var(--border);
+        }
+
+        .badge-icon {
+            width: 62px;
+            height: 62px;
+            margin: auto;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(244,185,66,.17);
+            color: var(--gold);
+        }
+
+        .badge-card.locked .badge-icon {
+            background: rgba(71,40,54,.06);
+            color: #aaa;
+        }
+
+        .badge-card h4 {
+            font-size: 10px;
+            color: var(--deep);
+            margin-top: 12px;
+        }
+
+        .badge-card p {
+            font-size: 8px;
+            color: var(--muted);
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+
+        /* =========================
+           PROGRESS
+        ========================= */
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .progress-big {
+            padding: 25px;
+            border-radius: 21px;
+            background: rgba(255,255,255,.68);
+            border: 1px solid var(--border);
+        }
+
+        .progress-big h3 {
+            font-size: 14px;
+            color: var(--deep);
+        }
+
+        .big-number {
+            font-size: 43px;
+            font-weight: 800;
+            color: var(--deep);
+            margin-top: 18px;
+        }
+
+        .progress-row {
+            margin-top: 20px;
+        }
+
+        .progress-row-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: var(--muted);
+        }
+
+        .bar {
+            height: 8px;
+            background: rgba(71,40,54,.07);
+            border-radius: 20px;
+            margin-top: 7px;
+            overflow: hidden;
+        }
+
+        .bar span {
+            height: 100%;
+            width: 0%;
+            display: block;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--mint), var(--teal));
+        }
+
+        /* =========================
+           PROFILE
+        ========================= */
+
+        .profile-page {
+            display: grid;
+            grid-template-columns: .65fr 1.35fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .profile-intro {
+            padding: 25px;
+            border-radius: 21px;
+            color: white;
+            background: linear-gradient(145deg, var(--deep), var(--teal));
+            box-shadow: var(--shadow);
+        }
+
+        .profile-intro .avatar {
+            width: 75px;
+            height: 75px;
+            border-radius: 23px;
+            font-size: 21px;
+            background: rgba(255,255,255,.18);
+            color: white;
+        }
+
+        .profile-intro h2 {
+            font-size: 20px;
+            margin-top: 17px;
+        }
+
+        .profile-intro p {
+            font-size: 9px;
+            line-height: 1.7;
+            color: rgba(255,255,255,.72);
+            margin-top: 5px;
+        }
+
+        .profile-info {
+            padding: 23px;
+            border-radius: 21px;
+            background: rgba(255,255,255,.68);
+            border: 1px solid var(--border);
+        }
+
+        .profile-info h3 {
+            color: var(--deep);
+            font-size: 15px;
+        }
+
+        .profile-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 11px;
+            margin-top: 17px;
+        }
+
+        .profile-field {
+            padding: 12px;
+            border-radius: 13px;
+            background: rgba(255,255,255,.67);
+            border: 1px solid var(--border);
+        }
+
+        .profile-field.full {
+            grid-column: 1 / -1;
+        }
+
+        .profile-field span {
+            font-size: 8px;
+            color: var(--muted);
+        }
+
+        .profile-field strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 10px;
+            color: var(--deep);
+            word-break: break-word;
+        }
+
+        /* =========================
+           EMPTY / COMING CONTENT
+        ========================= */
+
+        .empty-card {
+            padding: 45px 20px;
+            border-radius: 20px;
+            text-align: center;
+            background: rgba(255,255,255,.65);
+            border: 1px solid var(--border);
+        }
+
+        .empty-card i {
+            width: 40px;
+            height: 40px;
+            color: var(--teal);
+        }
+
+        .empty-card h3 {
+            color: var(--deep);
+            font-size: 15px;
+            margin-top: 10px;
+        }
+
+        .empty-card p {
+            color: var(--muted);
+            font-size: 9px;
+            margin-top: 5px;
+        }
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            z-index: 5000;
+
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            padding: 13px 16px;
+
+            background: var(--deep);
+            color: white;
+
+            border-radius: 13px;
+            box-shadow: 0 15px 40px rgba(71,40,54,.25);
+
+            font-size: 10px;
+
+            transform: translateY(80px);
+            opacity: 0;
+            pointer-events: none;
+
+            transition: .3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+            .stats-grid,
+            .explore-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .badge-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 850px) {
+            :root {
+                --sidebar-width: 255px;
+            }
+
+            .sidebar {
+                transform: translateX(-290px);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .mobile-menu {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .two-grid,
+            .map-layout,
+            .ai-layout,
+            .progress-grid,
+            .profile-page {
+                grid-template-columns: 1fr;
+            }
+
+            .learning-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .top-profile-text {
+                display: none;
+            }
+
+            .hero {
+                padding: 25px;
+                min-height: 310px;
+            }
+
+            .stats-grid,
+            .explore-grid,
+            .content-grid,
+            .badge-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-details,
+            .profile-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-field.full {
+                grid-column: auto;
+            }
+
+            .page-heading h1 {
+                font-size: 17px;
+            }
+
+            .topbar {
+                height: 55px;
+            }
+
+            .map-box,
+            .map-box iframe {
+                min-height: 380px;
+            }
+        }
+
+        /* =========================
+           SIDEBAR OVERLAY MOBILE
+        ========================= */
+
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(40,20,30,.25);
+            backdrop-filter: blur(3px);
+            z-index: 999;
+            display: none;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         LOADING
+    ========================= -->
+
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-box">
+            <div class="loading-logo">सं</div>
+            <p>Loading SanskritiSetu...</p>
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app">
+
+        <!-- =========================
+             SIDEBAR
+        ========================= -->
+
+        <aside class="sidebar" id="sidebar">
+
+            <div class="brand">
+                <div class="brand-logo">सं</div>
+
+                <div class="brand-text">
+                    <h2>SanskritiSetu</h2>
+                    <span>Connecting Youth With India's Culture</span>
+                </div>
+            </div>
+
+            <div class="nav-label">Explore</div>
+
+            <nav class="nav">
+
+                <button class="nav-item active" data-section="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </button>
+
+                <button class="nav-item" data-section="artists">
+                    <i data-lucide="palette"></i>
+                    <span>Artists & Crafts</span>
+                </button>
+
+                <button class="nav-item" data-section="games">
+                    <i data-lucide="gamepad-2"></i>
+                    <span>Cultural Games</span>
+                </button>
+
+                <button class="nav-item" data-section="map">
+                    <i data-lucide="map"></i>
+                    <span>Cultural Map</span>
+                </button>
+
+                <button class="nav-item" data-section="ai">
+                    <i data-lucide="sparkles"></i>
+                    <span>AI Culture</span>
+                </button>
+
+                <div class="nav-label">My Space</div>
+
+                <button class="nav-item" data-section="learning">
+                    <i data-lucide="book-open"></i>
+                    <span>My Learning</span>
+                </button>
+
+                <button class="nav-item" data-section="badges">
+                    <i data-lucide="award"></i>
+                    <span>XP & Badges</span>
+                </button>
+
+                <button class="nav-item" data-section="progress">
+                    <i data-lucide="chart-no-axes-combined"></i>
+                    <span>My Progress</span>
+                </button>
+
+                <button class="nav-item" data-section="profile">
+                    <i data-lucide="user-round"></i>
+                    <span>Profile</span>
+                </button>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <div class="mini-profile">
+                    <div class="avatar" id="sidebarAvatar">EX</div>
+
+                    <div class="mini-profile-info">
+                        <strong id="sidebarName">Explorer</strong>
+                        <span id="sidebarLocation">India</span>
+                    </div>
+
+                    <button
+                        class="icon-btn"
+                        id="logoutBtn"
+                        title="Logout"
+                        style="width:30px;height:30px;border:none;background:transparent;box-shadow:none;margin-left:auto;">
+                        <i data-lucide="log-out" style="width:14px;"></i>
+                    </button>
+                </div>
+
+            </div>
+
+        </aside>
+
+        <!-- =========================
+             MAIN
+        ========================= -->
+
+        <main class="main">
+
+            <!-- TOPBAR -->
+
+            <header class="topbar">
+
+                <div class="topbar-left">
+
+                    <button class="mobile-menu" id="mobileMenu">
+                        <i data-lucide="menu"></i>
+                    </button>
+
+                    <div class="page-heading">
+                        <h1 id="pageTitle">Dashboard</h1>
+                        <p id="pageSubtitle">
+                            Explore, learn and connect with India's cultural heritage.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="top-actions">
+
+                    <button
+                        class="icon-btn"
+                        title="Cultural Fact"
+                        id="factBtn">
+                        <i data-lucide="lightbulb"></i>
+                    </button>
+
+                    <button
+                        class="top-profile"
+                        id="topProfileBtn">
+
+                        <div class="avatar" id="topAvatar">EX</div>
+
+                        <div class="top-profile-text">
+                            <strong id="topName">Explorer</strong>
+                            <span>Culture Explorer</span>
+                        </div>
+
+                    </button>
+
+                </div>
+
+            </header>
+
+            <!-- DYNAMIC CONTENT -->
+
+            <div id="pageContent"></div>
+
+        </main>
+
+    </div>
+
+    <!-- TOAST -->
+
+    <div class="toast" id="toast">
+        <i data-lucide="check-circle-2"></i>
+        <span id="toastMessage">Done</span>
+    </div>
+
+
+    <script>
+
+        /* =========================================================
+           SUPABASE
+           =========================================================
+
+           IMPORTANT:
+           Agar tumhare existing supabase.js me already
+           supabaseClient bana hua hai, ye code usi ko use karega.
+
+           Example existing supabase.js:
+
+           const SUPABASE_URL = "YOUR_URL";
+           const SUPABASE_PUBLISHABLE_KEY = "YOUR_KEY";
+
+           const supabaseClient =
+               window.supabase.createClient(
+                   SUPABASE_URL,
+                   SUPABASE_PUBLISHABLE_KEY
+               );
+
+        ========================================================= */
+
+        let currentUser = null;
+
+        const pageContent = document.getElementById("pageContent");
+        const sidebar = document.getElementById("sidebar");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+        /* =========================================================
+           PAGE INFORMATION
+        ========================================================= */
+
+        const pageInfo = {
+
+            dashboard: {
+                title: "Dashboard",
+                subtitle: "Explore, learn and connect with India's cultural heritage."
+            },
+
+            artists: {
+                title: "Artists & Crafts",
+                subtitle: "Discover India's traditional artists, crafts and living heritage."
+            },
+
+            games: {
+                title: "Cultural Games",
+                subtitle: "Learn India's culture through interactive challenges and games."
+            },
+
+            map: {
+                title: "Cultural Map",
+                subtitle: "Explore important cultural places, traditions and heritage across India."
+            },
+
+            ai: {
+                title: "AI Culture",
+                subtitle: "Ask questions and discover India's culture with your AI cultural guide."
+            },
+
+            learning: {
+                title: "My Learning",
+                subtitle: "Continue your journey through India's history, art and traditions."
+            },
+
+            badges: {
+                title: "XP & Badges",
+                subtitle: "Earn XP by exploring culture and unlock new achievements."
+            },
+
+            progress: {
+                title: "My Progress",
+                subtitle: "See how your cultural exploration is growing over time."
+            },
+
+            profile: {
+                title: "Profile",
+                subtitle: "Your cultural explorer profile and personal interests."
+            }
+
+        };
+
+
+        /* =========================================================
+           HELPERS
+        ========================================================= */
+
+        function getInitials(name) {
+
+            if (!name) return "EX";
+
+            const parts = name.trim().split(/\s+/);
+
+            if (parts.length === 1) {
+                return parts[0].substring(0, 2).toUpperCase();
+            }
+
+            return (
+                parts[0][0] +
+                parts[parts.length - 1][0]
+            ).toUpperCase();
+        }
+
+
+        function escapeHTML(value) {
+
+            if (value === null || value === undefined) {
+                return "";
+            }
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+
+        function showToast(message) {
+
+            const toast = document.getElementById("toast");
+            const toastMessage = document.getElementById("toastMessage");
+
+            toastMessage.textContent = message;
+
+            toast.classList.add("show");
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 2800);
+        }
+
+
+        function refreshIcons() {
+
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+
+        /* =========================================================
+           GET USER
+        ========================================================= */
+
+        async function getLoggedInUser() {
+
+            try {
+
+                if (
+                    typeof getCurrentUser === "function"
+                ) {
+
+                    const user = await getCurrentUser();
+
+                    if (user) {
+                        return user;
+                    }
+                }
+
+            } catch (error) {
+
+                console.log("getCurrentUser unavailable:", error);
+
+            }
+
+
+            try {
+
+                if (
+                    typeof supabaseClient !== "undefined" &&
+                    supabaseClient.auth
+                ) {
+
+                    const result =
+                        await supabaseClient.auth.getUser();
+
+                    return result?.data?.user || null;
+                }
+
+            } catch (error) {
+
+                console.log("Supabase user error:", error);
+
+            }
+
+            return null;
+        }
+
+
+        /* =========================================================
+           USER PROFILE DATA
+        ========================================================= */
+
+        function getProfileData() {
+
+            const metadata =
+                currentUser?.user_metadata || {};
+
+            return {
+
+                fullName:
+                    metadata.full_name ||
+                    currentUser?.email?.split("@")[0] ||
+                    "Explorer",
+
+                email:
+                    currentUser?.email ||
+                    "Not available",
+
+                state:
+                    metadata.state ||
+                    "Not selected",
+
+                city:
+                    metadata.city ||
+                    "Not selected",
+
+                interests:
+                    metadata.interests ||
+                    "Culture & Heritage",
+
+                profession:
+                    metadata.profession ||
+                    "Cultural Explorer",
+
+                language:
+                    metadata.preferred_language ||
+                    metadata.language ||
+                    "English"
+
+            };
+
+        }
+
+
+        /* =========================================================
+           UPDATE USER UI
+        ========================================================= */
+
+        function updateUserUI() {
+
+            const profile = getProfileData();
+
+            const initials =
+                getInitials(profile.fullName);
+
+            document.getElementById("sidebarAvatar")
+                .textContent = initials;
+
+            document.getElementById("topAvatar")
+                .textContent = initials;
+
+            document.getElementById("sidebarName")
+                .textContent = profile.fullName;
+
+            document.getElementById("topName")
+                .textContent = profile.fullName;
+
+            document.getElementById("sidebarLocation")
+                .textContent =
+                profile.city !== "Not selected"
+                    ? profile.city
+                    : profile.state;
+
+        }
+
+
+        /* =========================================================
+           DASHBOARD PAGE
+        ========================================================= */
+
+        function renderDashboard() {
+
+            const profile = getProfileData();
+
+            pageContent.innerHTML = `
+
+                <!-- HERO -->
+
+                <section class="hero">
+
+                    <div class="hero-content">
+
+                        <div class="hero-tag">
+                            <i data-lucide="sparkles" style="width:12px;"></i>
+                            Your Cultural Journey
+                        </div>
+
+                        <h2>
+                            Discover the roots
+                            that connect us.
+                        </h2>
+
+                        <p>
+                            Explore India's incredible heritage,
+                            discover traditional artists and crafts,
+                            learn through games and ask AI about
+                            the stories, traditions and culture that
+                            make India unique.
+                        </p>
+
+                        <div class="hero-location">
+                            <i data-lucide="map-pin"></i>
+
+                            <span>
+                                Exploring from
+                                ${escapeHTML(
+                                    profile.city !== "Not selected"
+                                        ? profile.city + ", " + profile.state
+                                        : profile.state
+                                )}
+                            </span>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- STATS -->
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            <i data-lucide="zap"></i>
+                        </div>
+
+                        <div class="stat-value">0</div>
+
+                        <div class="stat-label">
+                            Cultural XP
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            <i data-lucide="map-pin"></i>
+                        </div>
+
+                        <div class="stat-value">0</div>
+
+                        <div class="stat-label">
+                            Places Explored
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            <i data-lucide="award"></i>
+                        </div>
+
+                        <div class="stat-value">0</div>
+
+                        <div class="stat-label">
+                            Badges Earned
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            <i data-lucide="book-open"></i>
+                        </div>
+
+                        <div class="stat-value">0</div>
+
+                        <div class="stat-label">
+                            Topics Learned
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EXPLORE -->
+
+                <div class="section-head">
+
+                    <div>
+                        <h3>Explore India's Culture</h3>
+                    </div>
+
+                    <span>
+                        Choose your journey
+                    </span>
+
+                </div>
+
+
+                <div class="explore-grid">
+
+                    <div
+                        class="explore-card"
+                        data-open-section="artists"
+                        style="
+                            background-image:
+                            url('https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&w=900&q=85');
+                        "
+                    >
+
+                        <div class="explore-info">
+
+                            <div class="small">
+                                Discover
+                            </div>
+
+                            <h4>Artists & Crafts</h4>
+
+                            <p>
+                                Meet traditions preserved by
+                                generations of Indian artisans.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="explore-card"
+                        data-open-section="games"
+                        style="
+                            background-image:
+                            url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=900&q=85');
+                        "
+                    >
+
+                        <div class="explore-info">
+
+                            <div class="small">
+                                Play & Learn
+                            </div>
+
+                            <h4>Cultural Games</h4>
+
+                            <p>
+                                Learn history and traditions
+                                through interactive challenges.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="explore-card"
+                        data-open-section="map"
+                        style="
+                            background-image:
+                            url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=85');
+                        "
+                    >
+
+                        <div class="explore-info">
+
+                            <div class="small">
+                                Explore
+                            </div>
+
+                            <h4>Cultural Map</h4>
+
+                            <p>
+                                Travel through India's cultural
+                                landmarks and heritage places.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="explore-card"
+                        data-open-section="ai"
+                        style="
+                            background-image:
+                            url('https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=900&q=85');
+                        "
+                    >
+
+                        <div class="explore-info">
+
+                            <div class="small">
+                                Ask AI
+                            </div>
+
+                            <h4>AI Culture</h4>
+
+                            <p>
+                                Ask anything about India's culture,
+                                traditions and heritage.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOWER -->
+
+                <div class="two-grid">
+
+                    <div class="glass-card discovery">
+
+                        <div class="label">
+                            Daily Cultural Discovery
+                        </div>
+
+                        <h3>
+                            India's heritage lives
+                            through its people.
+                        </h3>
+
+                        <p>
+                            From handwoven textiles and folk music
+                            to festivals, food and ancient traditions,
+                            India's cultural identity is made of
+                            thousands of living stories.
+                        </p>
+
+                        <button
+                            class="secondary-btn"
+                            data-open-section="artists"
+                        >
+                            Explore Heritage
+                            <i data-lucide="arrow-right" style="width:13px;"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="glass-card profile-card">
+
+                        <div class="profile-head">
+
+                            <div class="avatar" id="dashboardProfileAvatar">
+                                ${getInitials(profile.fullName)}
+                            </div>
+
+                            <div>
+                                <h3>
+                                    ${escapeHTML(profile.fullName)}
+                                </h3>
+
+                                <p>
+                                    ${escapeHTML(profile.profession)}
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="profile-details">
+
+                            <div class="detail">
+                                <span>State</span>
+                                <strong>
+                                    ${escapeHTML(profile.state)}
+                                </strong>
+                            </div>
+
+                            <div class="detail">
+                                <span>City</span>
+                                <strong>
+                                    ${escapeHTML(profile.city)}
+                                </strong>
+                            </div>
+
+                            <div class="detail">
+                                <span>Interests</span>
+                                <strong>
+                                    ${escapeHTML(profile.interests)}
+                                </strong>
+                            </div>
+
+                            <div class="detail">
+                                <span>Language</span>
+                                <strong>
+                                    ${escapeHTML(profile.language)}
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            class="secondary-btn"
+                            data-open-section="profile"
+                            style="margin-top:14px;width:100%;"
+                        >
+                            View Profile
+                            <i data-lucide="arrow-right" style="width:12px;"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            refreshIcons();
+        }
+
+
+        /* =========================================================
+           ARTISTS PAGE
+        ========================================================= */
+
+        function renderArtists() {
+
+            pageContent.innerHTML = `
+
+                <div class="page-title-card">
+
+                    <div class="eyebrow">
+                        Living Heritage
+                    </div>
+
+                    <h2>
+                        Artists & Traditional Crafts
+                    </h2>
+
+                    <p>
+                        India's crafts are more than beautiful objects.
+                        They carry stories, identities, regional knowledge
+                        and skills passed from one generation to another.
+                        Explore some of India's diverse craft traditions.
+                    </p>
+
+                </div>
+
+
+                <div class="content-grid">
+
+
+                    <!-- Madhubani -->
+
+                    <article class="artist-card">
+
+                        <div
+                            class="artist-image"
+                            style="
+                                background-image:
+                                url('https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=900&q=85');
+                            "
+                        ></div>
+
+                        <div class="artist-body">
+
+                            <span class="artist-tag">
+                                Bihar
+                            </span>
+
+                            <h3>
+                                Madhubani Painting
+                            </h3>
+
+                            <p>
+                                A distinctive painting tradition known
+                                for detailed patterns, natural themes,
+                                mythology and vibrant visual storytelling.
+                            </p>
+
+                            <div class="artist-footer">
+                                <span>
+                                    Folk Art
+                                </span>
+
+                                <span>
+                                    Mithila Region
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Pattachitra -->
+
+                    <article class="artist-card">
+
+                        <div
+                            class="artist-image"
+                            style="
+                                background-image:
+                                url('https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=900&q=80');
+                            "
+                        ></div>
+
+                        <div class="artist-body">
+
+                            <span class="artist-tag">
+                                Odisha
+                            </span>
+
+                            <h3>
+                                Pattachitra
+                            </h3>
+
+                            <p>
+                                Traditional cloth-based painting associated
+                                with Odisha, often featuring religious
+                                stories and carefully controlled decorative forms.
+                            </p>
+
+                            <div class="artist-footer">
+                                <span>
+                                    Painting
+                                </span>
+
+                                <span>
+                                    Odisha
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Blue Pottery -->
+
+                    <article class="artist-card">
+
+                        <div
+                            class="artist-image"
+                            style="
+                                background-image:
+                                url('https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=900&q=85');
+                            "
+                        ></div>
+
+                        <div class="artist-body">
+
+                            <span class="artist-tag">
+                                Rajasthan
+                            </span>
+
+                            <h3>
+                                Blue Pottery
+                            </h3>
+
+                            <p>
+                                Jaipur's distinctive decorative pottery
+                                tradition recognized for its blue-toned
+                                floral and geometric designs.
+                            </p>
+
+                            <div class="artist-footer">
+                                <span>
+                                    Pottery
+                                </span>
+
+                                <span>
+                                    Jaipur
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Chikankari -->
+
+                    <article class="artist-card">
+
+                        <div
+                            class="artist-image"
+                            style="
+                                background-image:
+                                url('https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=900&q=85');
+                            "
+                        ></div>
+
+                        <div class="artist-body">
+
+                            <span class="artist-tag">
+                                Uttar Pradesh
+                            </span>
+
+                            <h3>
+                                Chikankari
+                            </h3>
+
+                            <p>
+                                Lucknow's celebrated embroidery tradition,
+                                known for delicate handwork and intricate
+                                patterns on fabric.
+                            </p>
+
+                            <div class="artist-footer">
+                                <span>
+                                    Embroidery
+                                </span>
+
+                                <span>
+                                    Lucknow
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Phulkari -->
+
+                    <article class="artist-card">
+
+                        <div
+                            class="artist-image"
+                            style="
+                                background-image:
+                                url('https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=85');
+                            "
+                        ></div>
+
+                        <div class="artist-body">
+
+                            <span class="artist-tag">
+                                Punjab
+                            </span>
+
+                            <h3>
+                                Phulkari
+                            </h3>
+
+                            <p>
+                                A traditional embroidery style celebrated
+                                for colourful floral motifs and its strong
+                                connection with Punjabi cultural life.
+                            </p>
+
+                            <div class="artist-footer">
+                                <span>
+                                    Textile
+                                </span>
+
+                                <span>
+                                    Punjab
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- Dhokra -->
+
+                    <article class="artist-card">
+
+                        <div
+                            class="artist-image"
+                            style="
+                                background-image:
+                                url('https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=900&q=85');
+                            "
+                        ></div>
+
+                        <div class="artist-body">
+
+                            <span class="artist-tag">
+                                Central India
+                            </span>
+
+                            <h3>
+                                Dhokra Craft
+                            </h3>
+
+                            <p>
+                                A traditional metal-casting craft using
+                                the lost-wax technique, creating distinctive
+                                handmade forms and figurines.
+                            </p>
+
+                            <div class="artist-footer">
+                                <span>
+                                    Metal Craft
+                                </span>
+
+                                <span>
+                                    Tribal Heritage
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+            `;
+
+            refreshIcons();
+        }
+
+
+        /* =========================================================
+           CULTURAL GAMES
+        ========================================================= */
+
+        function renderGames() {
+
+            pageContent.innerHTML = `
+
+                <div class="page-title-card">
+
+                    <div class="eyebrow">
+                        Play • Learn • Discover
+                    </div>
+
+                    <h2>
+                        Cultural Games
+                    </h2>
+
+                    <p>
+                        Turn cultural learning into an interactive experience.
+                        Explore festivals, traditions, heritage places, art,
+                        languages and historical stories through challenges.
+                    </p>
+
+                </div>
+
+
+                <div class="content-grid">
+
+
+                    <div class="game-card">
+
+                        <div class="game-icon">
+                            <i data-lucide="brain"></i>
+                        </div>
+
+                        <h3>
+                            India Culture Quiz
+                        </h3>
+
+                        <p>
+                            Test your knowledge of Indian traditions,
+                            festivals, history, art, monuments and
+                            regional culture.
+                        </p>
+
+                        <div class="game-meta">
+                            <span class="pill">
+                                10 Questions
+                            </span>
+
+                            <span class="pill">
+                                Easy → Hard
+                            </span>
+                        </div>
+
+                        <button
+                            class="primary-btn"
+                            onclick="startGame('India Culture Quiz')"
+                        >
+                            Start Game
+                            <i data-lucide="arrow-right" style="width:13px;"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="game-card">
+
+                        <div class="game-icon">
+                            <i data-lucide="map"></i>
+                        </div>
+
+                        <h3>
+                            Guess the Heritage
+                        </h3>
+
+                        <p>
+                            Identify famous Indian heritage places from
+                            clues and learn the story behind each location.
+                        </p>
+
+                        <div class="game-meta">
+                            <span class="pill">
+                                Places
+                            </span>
+
+                            <span class="pill">
+                                Visual Clues
+                            </span>
+                        </div>
+
+                        <button
+                            class="primary-btn"
+                            onclick="startGame('Guess the Heritage')"
+                        >
+                            Start Game
+                            <i data-lucide="arrow-right" style="width:13px;"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="game-card">
+
+                        <div class="game-icon">
+                            <i data-lucide="calendar-heart"></i>
+                        </div>
+
+                        <h3>
+                            Festival Challenge
+                        </h3>
+
+                        <p>
+                            Match festivals with their regions, traditions,
+                            stories and cultural significance.
+                        </p>
+
+                        <div class="game-meta">
+                            <span class="pill">
+                                Festivals
+                            </span>
+
+                            <span class="pill">
+                                Matching
+                            </span>
+                        </div>
+
+                        <button
+                            class="primary-btn"
+                            onclick="startGame('Festival Challenge')"
+                        >
+                            Start Game
+                            <i data-lucide="arrow-right" style="width:13px;"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="game-card">
+
+                        <div class="game-icon">
+                            <i data-lucide="languages"></i>
+                        </div>
+
+                        <h3>
+                            Language Explorer
+                        </h3>
+
+                        <p>
+                            Discover greetings, words and cultural expressions
+                            from India's many linguistic traditions.
+                        </p>
+
+                        <div class="game-meta">
+                            <span class="pill">
+                                Languages
+                            </span>
+
+                            <span class="pill">
+                                Beginner
+                            </span>
+                        </div>
+
+                        <button
+                            class="primary-btn"
+                            onclick="startGame('Language Explorer')"
+                        >
+                            Start Game
+                            <i data-lucide="arrow-right" style="width:13px;"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="game-card">
+
+                        <div class="game-icon">
+                            <i data-lucide="palette"></i>
+                        </div>
+
+                        <h3>
+                            Art Detective
+                        </h3>
+
+                        <p>
+                            Recognise Indian art and craft traditions
+                            from visual and descriptive clues.
+                        </p>
+
+                        <div class="game-meta">
+                            <span class="pill">
+                                Art
+                            </span>
+
+                            <span class="pill">
+                                Challenge
+                            </span>
+                        </div>
+
+                        <button
+                            class="primary-btn"
+                            onclick="startGame('Art Detective')"
+                        >
+                            Start Game
+                            <i data-lucide="arrow-right" style="width:13px;"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="game-card">
+
+                        <div class="game-icon">
+                            <i data-lucide="scroll-text"></i>
+                        </div>
+
+                        <h3>
+                            Story of India
+                        </h3>
+
+                        <p>
+                            Follow short cultural stories and answer questions
+                            to unlock the next chapter.
+                        </p>
+
+                        <div class="game-meta">
+                            <span class="pill">
+                                Stories
+                            </span>
+
+                            <span class="pill">
+                                Learning
+                            </span>
+                        </div>
+
+                        <button
+                            class="primary-btn"
+                            onclick="startGame('Story of India')"
+                        >
+                            Start Game
+                            <i data-lucide="arrow-right" style="width:13px;"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            refreshIcons();
+        }
+
+
+        function startGame(gameName) {
+
+            showToast(
+                gameName +
+                " selected — game module can be connected here."
+            );
+
+        }
+
+
+        /* =========================================================
+           CULTURAL MAP
+        ========================================================= */
+
+        function renderMap() {
+
+            pageContent.innerHTML = `
+
+                <div class="page-title-card">
+
+                    <div class="eyebrow">
+                        Explore India
+                    </div>
+
+                    <h2>
+                        Cultural Map
+                    </h2>
+
+                    <p>
+                        Explore India's cultural diversity through important
+                        heritage destinations, sacred places, historic cities,
+                        crafts and traditions.
+                    </p>
+
+                </div>
+
+
+                <div class="map-layout">
+
+                    <div class="glass-card">
+
+                        <div class="section-head" style="margin-top:0;">
+                            <h3>
+                                Featured Places
+                            </h3>
+
+                            <span>
+                                India
+                            </span>
+                        </div>
+
+                        <div class="map-list">
+
+                            <div
+                                class="place-item selected"
+                                onclick="selectPlace('Taj Mahal','Agra, Uttar Pradesh','https://www.google.com/maps?q=Taj+Mahal+Agra&output=embed',this)"
+                            >
+
+                                <div class="place-item-top">
+
+                                    <div class="place-icon">
+                                        <i data-lucide="landmark" style="width:15px;"></i>
+                                    </div>
+
+                                    <div>
+                                        <h4>Taj Mahal</h4>
+                                        <p>Agra, Uttar Pradesh</p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="place-item"
+                                onclick="selectPlace('Hampi','Hampi, Karnataka','https://www.google.com/maps?q=Hampi+Karnataka&output=embed',this)"
+                            >
+
+                                <div class="place-item-top">
+
+                                    <div class="place-icon">
+                                        <i data-lucide="castle" style="width:15px;"></i>
+                                    </div>
+
+                                    <div>
+                                        <h4>Hampi</h4>
+                                        <p>Karnataka</p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="place-item"
+                                onclick="selectPlace('Konark Sun Temple','Konark, Odisha','https://www.google.com/maps?q=Konark+Sun+Temple&output=embed',this)"
+                            >
+
+                                <div class="place-item-top">
+
+                                    <div class="place-icon">
+                                        <i data-lucide="sun" style="width:15px;"></i>
+                                    </div>
+
+                                    <div>
+                                        <h4>Konark Sun Temple</h4>
+                                        <p>Odisha</p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="place-item"
+                                onclick="selectPlace('Varanasi','Varanasi, Uttar Pradesh','https://www.google.com/maps?q=Varanasi+Uttar+Pradesh&output=embed',this)"
+                            >
+
+                                <div class="place-item-top">
+
+                                    <div class="place-icon">
+                                        <i data-lucide="waves" style="width:15px;"></i>
+                                    </div>
+
+                                    <div>
+                                        <h4>Varanasi</h4>
+                                        <p>Uttar Pradesh</p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="place-item"
+                                onclick="selectPlace('Jaipur','Jaipur, Rajasthan','https://www.google.com/maps?q=Jaipur+Rajasthan&output=embed',this)"
+                            >
+
+                                <div class="place-item-top">
+
+                                    <div class="place-icon">
+                                        <i data-lucide="building-2" style="width:15px;"></i>
+                                    </div>
+
+                                    <div>
+                                        <h4>Jaipur</h4>
+                                        <p>Rajasthan</p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="place-item"
+                                onclick="selectPlace('Majuli','Majuli, Assam','https://www.google.com/maps?q=Majuli+Assam&output=embed',this)"
+                            >
+
+                                <div class="place-item-top">
+
+                                    <div class="place-icon">
+                                        <i data-lucide="trees" style="width:15px;"></i>
+                                    </div>
+
+                                    <div>
+                                        <h4>Majuli</h4>
+                                        <p>Assam</p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="map-box">
+
+                        <iframe
+                            id="cultureMap"
+                            src="https://www.google.com/maps?q=Taj+Mahal+Agra&output=embed"
+                            loading="lazy"
+                            allowfullscreen
+                        ></iframe>
+
+                        <div class="map-info">
+
+                            <h4 id="mapPlaceTitle">
+                                Taj Mahal
+                            </h4>
+
+                            <p id="mapPlaceDescription">
+                                Agra, Uttar Pradesh
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            refreshIcons();
+        }
+
+
+        function selectPlace(
+            name,
+            location,
+            mapURL,
+            element
+        ) {
+
+            document
+                .querySelectorAll(".place-item")
+                .forEach(item => {
+                    item.classList.remove("selected");
+                });
+
+            element.classList.add("selected");
+
+            document.getElementById("cultureMap")
+                .src = mapURL;
+
+            document.getElementById("mapPlaceTitle")
+                .textContent = name;
+
+            document.getElementById("mapPlaceDescription")
+                .textContent = location;
+
+        }
+
+
+        /* =========================================================
+           AI CULTURE
+        ========================================================= */
+
+        function renderAI() {
+
+            pageContent.innerHTML = `
+
+                <div class="page-title-card">
+
+                    <div class="eyebrow">
+                        Powered by AI
+                    </div>
+
+                    <h2>
+                        AI Culture Guide
+                    </h2>
+
+                    <p>
+                        Ask questions about India's festivals, traditions,
+                        monuments, art, languages, food, mythology, regional
+                        history and cultural practices.
+                    </p>
+
+                </div>
+
+
+                <div class="ai-layout">
+
+
+                    <div class="ai-side">
+
+                        <div class="ai-orb">
+                            <i data-lucide="sparkles"></i>
+                        </div>
+
+                        <h3>
+                            Meet your
+                            Cultural Guide
+                        </h3>
+
+                        <p>
+                            Curious about why a festival is celebrated?
+                            Want to know the story behind a monument?
+                            Ask naturally and explore.
+                        </p>
+
+                        <div class="ai-feature-list">
+
+                            <div class="ai-feature">
+                                <i data-lucide="check-circle-2"></i>
+                                Festivals & traditions
+                            </div>
+
+                            <div class="ai-feature">
+                                <i data-lucide="check-circle-2"></i>
+                                Indian art & crafts
+                            </div>
+
+                            <div class="ai-feature">
+                                <i data-lucide="check-circle-2"></i>
+                                Historical places
+                            </div>
+
+                            <div class="ai-feature">
+                                <i data-lucide="check-circle-2"></i>
+                                Regional culture
+                            </div>
+
+                            <div class="ai-feature">
+                                <i data-lucide="check-circle-2"></i>
+                                Languages & customs
+                            </div>
+
+                            <div class="ai-feature">
+                                <i data-lucide="check-circle-2"></i>
+                                Simple explanations
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="ai-chat">
+
+                        <div class="chat-header">
+
+                            <div class="chat-avatar">
+                                <i data-lucide="sparkles" style="width:17px;"></i>
+                            </div>
+
+                            <div>
+                                <h4>
+                                    SanskritiSetu AI
+                                </h4>
+
+                                <span>
+                                    ● Ready to explore
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="chat-messages"
+                            id="chatMessages"
+                        >
+
+                            <div class="message ai">
+
+                                Namaste! 🙏
+                                I'm your SanskritiSetu cultural guide.
+
+                                <br><br>
+
+                                Ask me anything about India's culture,
+                                heritage, traditions, festivals, crafts
+                                or historical places.
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="suggestions">
+
+                            <button
+                                class="suggestion"
+                                onclick="askSuggestion('Why is Diwali celebrated?')"
+                            >
+                                Why is Diwali celebrated?
+                            </button>
+
+                            <button
+                                class="suggestion"
+                                onclick="askSuggestion('Tell me about Madhubani painting.')"
+                            >
+                                Madhubani painting
+                            </button>
+
+                            <button
+                                class="suggestion"
+                                onclick="askSuggestion('Tell me about the cultural importance of Varanasi.')"
+                            >
+                                Varanasi culture
+                            </button>
+
+                            <button
+                                class="suggestion"
+                                onclick="askSuggestion('What makes Indian classical dance unique?')"
+                            >
+                                Classical dance
+                            </button>
+
+                        </div>
+
+
+                        <div class="chat-input">
+
+                            <textarea
+                                id="aiInput"
+                                placeholder="Ask about India's culture..."
+                                onkeydown="handleAIKey(event)"
+                            ></textarea>
+
+                            <button
+                                class="send-btn"
+                                onclick="sendAIMessage()"
+                                id="sendAIButton"
+                            >
+                                <i data-lucide="send" style="width:15px;"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            refreshIcons();
+        }
+
+
+        function askSuggestion(question) {
+
+            const input =
+                document.getElementById("aiInput");
+
+            if (!input) return;
+
+            input.value = question;
+
+            sendAIMessage();
+        }
+
+
+        function handleAIKey(event) {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendAIMessage();
+
+            }
+
+        }
+
+
+        function addChatMessage(
+            text,
+            type
+        ) {
+
+            const messages =
+                document.getElementById("chatMessages");
+
+            if (!messages) return;
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "message " + type;
+
+            div.textContent = text;
+
+            messages.appendChild(div);
+
+            messages.scrollTop =
+                messages.scrollHeight;
+
+        }
+
+
+        async function sendAIMessage() {
+
+            const input =
+                document.getElementById("aiInput");
+
+            const button =
+                document.getElementById("sendAIButton");
+
+            if (!input || !button) return;
+
+            const question =
+                input.value.trim();
+
+            if (!question) return;
+
+            addChatMessage(
+                question,
+                "user"
+            );
+
+            input.value = "";
+
+            button.disabled = true;
+
+            button.innerHTML =
+                '<i data-lucide="loader-circle" style="width:15px;"></i>';
+
+            refreshIcons();
+
+            addChatMessage(
+                "Let me explore that for you...",
+                "ai"
+            );
+
+            const loadingMessage =
+                document.querySelector(
+                    "#chatMessages .message.ai:last-child"
+                );
+
+
+            try {
+
+                /* -----------------------------------------------
+                   EXISTING QUIZONE / SANSKRITISETU FLASK ENDPOINT
+                   ----------------------------------------------- */
+
+                const response =
+                    await fetch(
+                        "/api/ai/generate",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                prompt: `
+You are SanskritiSetu AI, a cultural education assistant
+focused on India's rich cultural heritage.
+
+Answer the following user question accurately and simply.
+
+Question:
+${question}
+
+Rules:
+- Focus on Indian culture, heritage, traditions, history,
+  festivals, arts, crafts, languages, food or regional culture.
+- Explain in simple student-friendly language.
+- If relevant, mention the region/state.
+- Do not invent facts.
+- If something is uncertain, clearly say so.
+- Keep the answer informative but concise.
+                                `.trim(),
+
+                                question: question,
+
+                                topic: "Indian Culture"
+
+                            })
+
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "AI server returned " +
+                        response.status
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                let answer = "";
+
+
+                /*
+                    Different backend response formats
+                    are handled here so small backend
+                    changes don't break the UI.
+                */
+
+                if (typeof data === "string") {
+
+                    answer = data;
+
+                } else {
+
+                    answer =
+                        data.answer ||
+                        data.response ||
+                        data.result ||
+                        data.text ||
+                        data.content ||
+                        data.message ||
+                        "";
+
+                }
+
+
+                if (!answer) {
+
+                    answer =
+                        "I received a response, but could not read the AI answer. Please try again.";
+
+                }
+
+
+                if (loadingMessage) {
+
+                    loadingMessage.textContent =
+                        answer;
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "AI error:",
+                    error
+                );
+
+
+                if (loadingMessage) {
+
+                    loadingMessage.textContent =
+                        "AI service is currently unavailable. Please make sure your Flask backend is running and the /api/ai/generate endpoint is active.";
+
+                }
+
+                showToast(
+                    "AI service is unavailable"
+                );
+
+            } finally {
+
+                button.disabled = false;
+
+                button.innerHTML =
+                    '<i data-lucide="send" style="width:15px;"></i>';
+
+                refreshIcons();
+
+                const messages =
+                    document.getElementById(
+                        "chatMessages"
+                    );
+
+                if (messages) {
+
+                    messages.scrollTop =
+                        messages.scrollHeight;
+
+                }
+
+            }
+
+        }
+
+
+        /* =========================================================
+           MY LEARNING
+        ========================================================= */
+
+        function renderLearning() {
+
+            pageContent.innerHTML = `
+
+                <div class="page-title-card">
+
+                    <div class="eyebrow">
+                        Your Journey
+                    </div>
+
+                    <h2>
+                        My Learning
+                    </h2>
+
+                    <p>
+                        Keep track of the cultural topics you explore.
+                        Every artist, place, festival and story you discover
+                        can become part of your learning journey.
+                    </p>
+
+                </div>
+
+
+                <div class="learning-grid">
+
+                    <div class="learning-card">
+
+                        <h3>
+                            Indian Festivals
+                        </h3>
+
+                        <p>
+                            Explore the stories, traditions and regional
+                            variations behind India's festivals.
+                        </p>
+
+                        <div class="progress-line">
+                            <span></span>
+                        </div>
+
+                        <small
+                            style="
+                                display:block;
+                                margin-top:7px;
+                                font-size:8px;
+                                color:var(--muted);
+                            "
+                        >
+                            Not started
+                        </small>
+
+                    </div>
+
+
+                    <div class="learning-card">
+
+                        <h3>
+                            Traditional Arts
+                        </h3>
+
+                        <p>
+                            Learn about paintings, textiles, crafts,
+                            dance and music traditions.
+                        </p>
+
+                        <div class="progress-line">
+                            <span></span>
+                        </div>
+
+                        <small
+                            style="
+                                display:block;
+                                margin-top:7px;
+                                font-size:8px;
+                                color:var(--muted);
+                            "
+                        >
+                            Not started
+                        </small>
+
+                    </div>
+
+
+                    <div class="learning-card">
+
+                        <h3>
+                            Heritage Places
+                        </h3>
+
+                        <p>
+                            Discover important monuments, historic cities
+                            and culturally significant places.
+                        </p>
+
+                        <div class="progress-line">
+                            <span></span>
+                        </div>
+
+                        <small
+                            style="
+                                display:block;
+                                margin-top:7px;
+                                font-size:8px;
+                                color:var(--muted);
+                            "
+                        >
+                            Not started
+                        </small>
+
+                    </div>
+
+
+                    <div class="learning-card">
+
+                        <h3>
+                            Regional India
+                        </h3>
+
+                        <p>
+                            Discover how India's traditions change across
+                            different states and communities.
+                        </p>
+
+                        <div class="progress-line">
+                            <span></span>
+                        </div>
+
+                        <small
+                            style="
+                                display:block;
+                                margin-top:7px;
+                                font-size:8px;
+                                color:var(--muted);
+                            "
+                        >
+                            Not started
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="glass-card" style="margin-top:15px;">
+
+                    <div class="section-head" style="margin-top:0;">
+                        <h3>
+                            Recently Explored
+                        </h3>
+
+                        <span>
+                            Your activity
+                        </span>
+                    </div>
+
+                    <div class="empty-card">
+
+                        <i data-lucide="book-open"></i>
+
+                        <h3>
+                            Your learning journey starts here
+                        </h3>
+
+                        <p>
+                            Explore a cultural place, artist, game or
+                            AI topic to see your activity here.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            refreshIcons();
+        }
+
+
+        /* =========================================================
+           BADGES
+        ========================================================= */
+
+        function renderBadges() {
+
+            pageContent.innerHTML = `
+
+                <div class="page-title-card">
+
+                    <div class="eyebrow">
+                        Achievement Journey
+                    </div>
+
+                    <h2>
+                        XP & Badges
+                    </h2>
+
+                    <p>
+                        Earn cultural XP by exploring places, learning
+                        about traditions, playing games and discovering
+                        India's heritage.
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="glass-card"
+                    style="
+                        margin-top:15px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:space-between;
+                        gap:20px;
+                        flex-wrap:wrap;
+                    "
+                >
+
+                    <div>
+
+                        <span
+                            style="
+                                font-size:9px;
+                                color:var(--muted);
+                            "
+                        >
+                            CURRENT XP
+                        </span>
+
+                        <div
+                            style="
+                                font-size:35px;
+                                font-weight:800;
+                                color:var(--deep);
+                                margin-top:3px;
+                            "
+                        >
+                            0 XP
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <span
+                            style="
+                                font-size:9px;
+                                color:var(--muted);
+                            "
+                        >
+                            NEXT LEVEL
+                        </span>
+
+                        <div
+                            style="
+                                font-size:14px;
+                                font-weight:800;
+                                color:var(--deep);
+                                margin-top:5px;
+                            "
+                        >
+                            Culture Explorer
+                        </div>
+
+                    </div>
+
+
+                    <div style="min-width:220px;">
+
+                        <div
+                            style="
+                                display:flex;
+                                justify-content:space-between;
+                                font-size:8px;
+                                color:var(--muted);
+                            "
+                        >
+                            <span>0 XP</span>
+                            <span>100 XP</span>
+                        </div>
+
+                        <div class="bar">
+                            <span></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="badge-grid">
+
+                    ${badgeCard(
+                        "Compass",
+                        "First Explorer",
+                        "Explore your first cultural place.",
+                        "map-pin",
+                        false
+                    )}
+
+                    ${badgeCard(
+                        "Lotus",
+                        "Culture Starter",
+                        "Learn your first cultural topic.",
+                        "flower-2",
+                        true
+                    )}
+
+                    ${badgeCard(
+                        "Palette",
+                        "Art Discoverer",
+                        "Discover Indian art and crafts.",
+                        "palette",
+                        true
+                    )}
+
+                    ${badgeCard(
+                        "Game",
+                        "Culture Player",
+                        "Complete your first cultural game.",
+                        "gamepad-2",
+                        true
+                    )}
+
+                    ${badgeCard(
+                        "Spark",
+                        "Curious Mind",
+                        "Ask AI your first cultural question.",
+                        "sparkles",
+                        true
+                    )}
+
+                    ${badgeCard(
+                        "Map",
+                        "Heritage Traveller",
+                        "Explore multiple heritage locations.",
+                        "map",
+                        true
+                    )}
+
+                    ${badgeCard(
+                        "Book",
+                        "Knowledge Seeker",
+                        "Complete multiple learning topics.",
+                        "book-open",
+                        true
+                    )}
+
+                    ${badgeCard(
+                        "Crown",
+                        "Culture Champion",
+                        "Become a dedicated cultural explorer.",
+                        "crown",
+                        true
+                    )}
+
+                </div>
+
+            `;
+
+            refreshIcons();
+        }
+
+
+        function badgeCard(
+            iconName,
+            title,
+            description,
+            icon,
+            locked
+        ) {
+
+            return `
+
+                <div class="badge-card ${locked ? "locked" : ""}">
+
+                    <div class="badge-icon">
+                        <i data-lucide="${icon}"></i>
+                    </div>
+
+                    <h4>
+                        ${title}
+                    </h4>
+
+                    <p>
+                        ${description}
+                    </p>
+
+                    <div
+                        style="
+                            margin-top:10px;
+                            font-size:8px;
+                            color:${locked ? "#aaa" : "#4d9b77"};
+                            font-weight:700;
+                        "
+                    >
+                        ${locked ? "Locked" : "Available"}
+                    </div>
+
+                </div>
+
+            `;
+        }
+
+
+        /* =========================================================
+           PROGRESS
+        ========================================================= */
+
+        function renderProgress() {
+
+            pageContent.innerHTML = `
+
+                <div class="page-title-card">
+
+                    <div class="eyebrow">
+                        Cultural Growth
+                    </div>
+
+                    <h2>
+                        My Progress
+                    </h2>
+
+                    <p>
+                        Your progress will grow as you explore cultural
+                        places, learn new topics, complete games and
+                        interact with the cultural guide.
+                    </p>
+
+                </div>
+
+
+                <div class="progress-grid">
+
+                    <div class="progress-big">
+
+                        <h3>
+                            Overall Cultural Journey
+                        </h3>
+
+                        <div class="big-number">
+                            0%
+                        </div>
+
+                        <p
+                            style="
+                                font-size:9px;
+                                color:var(--muted);
+                                margin-top:3px;
+                            "
+                        >
+                            Journey just started
+                        </p>
+
+
+                        <div class="progress-row">
+
+                            <div class="progress-row-top">
+                                <span>
+                                    Places
+                                </span>
+
+                                <span>
+                                    0
+                                </span>
+                            </div>
+
+                            <div class="bar">
+                                <span></span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="progress-row">
+
+                            <div class="progress-row-top">
+                                <span>
+                                    Topics
+                                </span>
+
+                                <span>
+                                    0
+                                </span>
+                            </div>
+
+                            <div class="bar">
+                                <span></span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="progress-row">
+
+                            <div class="progress-row-top">
+                                <span>
+                                    Games
+                                </span>
+
+                                <span>
+                                    0
+                                </span>
+                            </div>
+
+                            <div class="bar">
+                                <span></span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="progress-big">
+
+                        <h3>
+                            Cultural Interests
+                        </h3>
+
+                        <p
+                            style="
+                                color:var(--muted);
+                                font-size:9px;
+                                margin-top:5px;
+                            "
+                        >
+                            Based on the interests selected
+                            in your profile.
+                        </p>
+
+
+                        <div
+                            class="empty-card"
+                            style="
+                                margin-top:20px;
+                                padding:35px 15px;
+                            "
+                        >
+
+                            <i data-lucide="bar-chart-3"></i>
+
+                            <h3>
+                                Progress data will appear here
+                            </h3>
+
+                            <p>
+                                Start exploring to build your
+                                cultural activity history.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            refreshIcons();
+        }
+
+
+        /* =========================================================
+           PROFILE
+        ========================================================= */
+
+        function renderProfile() {
+
+            const profile =
+                getProfileData();
+
+            pageContent.innerHTML = `
+
+                <div class="profile-page">
+
+                    <div class="profile-intro">
+
+                        <div class="avatar">
+                            ${getInitials(profile.fullName)}
+                        </div>
+
+                        <h2>
+                            ${escapeHTML(profile.fullName)}
+                        </h2>
+
+                        <p>
+                            ${escapeHTML(profile.profession)}
+                        </p>
+
+                        <p style="margin-top:16px;">
+                            Your profile helps SanskritiSetu personalise
+                            the cultural journey around your interests,
+                            location and preferred language.
+                        </p>
+
+                    </div>
+
+
+                    <div class="profile-info">
+
+                        <h3>
+                            Cultural Explorer Profile
+                        </h3>
+
+                        <div class="profile-fields">
+
+                            <div class="profile-field full">
+
+                                <span>
+                                    Full Name
+                                </span>
+
+                                <strong>
+                                    ${escapeHTML(profile.fullName)}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-field full">
+
+                                <span>
+                                    Email
+                                </span>
+
+                                <strong>
+                                    ${escapeHTML(profile.email)}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-field">
+
+                                <span>
+                                    State / Union Territory
+                                </span>
+
+                                <strong>
+                                    ${escapeHTML(profile.state)}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-field">
+
+                                <span>
+                                    City
+                                </span>
+
+                                <strong>
+                                    ${escapeHTML(profile.city)}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-field">
+
+                                <span>
+                                    Interests
+                                </span>
+
+                                <strong>
+                                    ${escapeHTML(profile.interests)}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-field">
+
+                                <span>
+                                    Your Profession
+                                </span>
+
+                                <strong>
+                                    ${escapeHTML(profile.profession)}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="profile-field full">
+
+                                <span>
+                                    Preferred Language
+                                </span>
+
+                                <strong>
+                                    ${escapeHTML(profile.language)}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            class="primary-btn"
+                            style="margin-top:17px;"
+                            onclick="showToast('Profile editing can be connected to profile.html or Supabase updateUser.')"
+                        >
+                            <i data-lucide="pencil" style="width:13px;"></i>
+                            Edit Profile
+                        </button>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            refreshIcons();
+        }
+
+
+        /* =========================================================
+           ROUTER
+           ========================================================= */
+
+        function renderSection(
+            section,
+            updateHistory = true
+        ) {
+
+            if (!pageInfo[section]) {
+                section = "dashboard";
+            }
+
+
+            /* Update active sidebar */
+
+            document
+                .querySelectorAll(".nav-item")
+                .forEach(item => {
+
+                    item.classList.toggle(
+                        "active",
+                        item.dataset.section === section
+                    );
+
+                });
+
+
+            /* Update heading */
+
+            document.getElementById("pageTitle")
+                .textContent =
+                pageInfo[section].title;
+
+            document.getElementById("pageSubtitle")
+                .textContent =
+                pageInfo[section].subtitle;
+
+
+            /* Render */
+
+            switch (section) {
+
+                case "dashboard":
+                    renderDashboard();
+                    break;
+
+                case "artists":
+                    renderArtists();
+                    break;
+
+                case "games":
+                    renderGames();
+                    break;
+
+                case "map":
+                    renderMap();
+                    break;
+
+                case "ai":
+                    renderAI();
+                    break;
+
+                case "learning":
+                    renderLearning();
+                    break;
+
+                case "badges":
+                    renderBadges();
+                    break;
+
+                case "progress":
+                    renderProgress();
+                    break;
+
+                case "profile":
+                    renderProfile();
+                    break;
+
+                default:
+                    renderDashboard();
+
+            }
+
+
+            /* Browser URL changes WITHOUT reload */
+
+            if (updateHistory) {
+
+                history.pushState(
+                    { section: section },
+                    "",
+                    "#" + section
+                );
+
+            }
+
+
+            /* Mobile sidebar close */
+
+            if (
+                window.innerWidth <= 850
+            ) {
+
+                closeSidebar();
+
+            }
+
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+
+        /* =========================================================
+           NAVIGATION CLICK
+           ========================================================= */
+
+        document
+            .querySelectorAll(".nav-item")
+            .forEach(item => {
+
+                item.addEventListener(
+                    "click",
+                    function(event) {
+
+                        event.preventDefault();
+
+                        const section =
+                            this.dataset.section;
+
+                        renderSection(section);
+
+                    }
+                );
+
+            });
+
+
+        /* =========================================================
+           DASHBOARD INTERNAL BUTTONS
+           ========================================================= */
+
+        document.addEventListener(
+            "click",
+            function(event) {
+
+                const target =
+                    event.target.closest(
+                        "[data-open-section]"
+                    );
+
+                if (!target) return;
+
+                const section =
+                    target.dataset.openSection;
+
+                if (section) {
+
+                    renderSection(section);
+
+                }
+
+            }
+        );
+
+
+        /* =========================================================
+           TOP PROFILE
+           ========================================================= */
+
+        document
+            .getElementById("topProfileBtn")
+            .addEventListener(
+                "click",
+                function() {
+
+                    renderSection("profile");
+
+                }
+            );
+
+
+        /* =========================================================
+           MOBILE MENU
+           ========================================================= */
+
+        document
+            .getElementById("mobileMenu")
+            .addEventListener(
+                "click",
+                function() {
+
+                    sidebar.classList.add("open");
+
+                    sidebarOverlay.classList.add("show");
+
+                }
+            );
+
+
+        function closeSidebar() {
+
+            sidebar.classList.remove("open");
+
+            sidebarOverlay.classList.remove("show");
+
+        }
+
+
+        sidebarOverlay.addEventListener(
+            "click",
+            closeSidebar
+        );
+
+
+        /* =========================================================
+           BROWSER BACK / FORWARD
+           NO RELOAD
+           ========================================================= */
+
+        window.addEventListener(
+            "popstate",
+            function(event) {
+
+                const section =
+                    event.state?.section ||
+                    location.hash.replace("#", "") ||
+                    "dashboard";
+
+                renderSection(
+                    section,
+                    false
+                );
+
+            }
+        );
+
+
+        /* =========================================================
+           HASH DIRECT OPEN
+           ========================================================= */
+
+        function getInitialSection() {
+
+            const hash =
+                location.hash.replace("#", "");
+
+            if (pageInfo[hash]) {
+
+                return hash;
+
+            }
+
+            return "dashboard";
+        }
+
+
+        /* =========================================================
+           LOGOUT
+           ========================================================= */
+
+        async function handleLogout() {
+
+            try {
+
+                if (
+                    typeof logoutUser === "function"
+                ) {
+
+                    await logoutUser();
+
+                } else if (
+                    typeof supabaseClient !== "undefined" &&
+                    supabaseClient.auth
+                ) {
+
+                    await supabaseClient.auth.signOut();
+
+                }
+
+                window.location.href =
+                    "index.html";
+
+            } catch (error) {
+
+                console.error(
+                    "Logout error:",
+                    error
+                );
+
+                window.location.href =
+                    "index.html";
+
+            }
+
+        }
+
+
+        document
+            .getElementById("logoutBtn")
+            .addEventListener(
+                "click",
+                handleLogout
+            );
+
+
+        /* =========================================================
+           CULTURAL FACT BUTTON
+        ========================================================= */
+
+        document
+            .getElementById("factBtn")
+            .addEventListener(
+                "click",
+                function() {
+
+                    const facts = [
+
+                        "India has hundreds of distinct languages and many regional cultural traditions.",
+
+                        "Madhubani painting is traditionally associated with the Mithila region of Bihar.",
+
+                        "Phulkari is a traditional embroidery style strongly associated with Punjab.",
+
+                        "Pattachitra is a traditional painting style associated with Odisha.",
+
+                        "India's cultural heritage includes tangible monuments as well as living traditions, crafts, music and festivals."
+
+                    ];
+
+                    const randomFact =
+                        facts[
+                            Math.floor(
+                                Math.random() *
+                                facts.length
+                            )
+                        ];
+
+                    showToast(
+                        randomFact
+                    );
+
+                }
+            );
+
+
+        /* =========================================================
+           LOAD DASHBOARD
+        ========================================================= */
+
+        async function loadDashboard() {
+
+            try {
+
+                currentUser =
+                    await getLoggedInUser();
+
+                updateUserUI();
+
+            } catch (error) {
+
+                console.error(
+                    "Dashboard loading error:",
+                    error
+                );
+
+            }
+
+
+            const initialSection =
+                getInitialSection();
+
+
+            /*
+                IMPORTANT:
+                renderSection uses history.pushState only
+                when updateHistory=true.
+
+                Here false is used so the page doesn't
+                unnecessarily change URL during first load.
+            */
+
+            renderSection(
+                initialSection,
+                false
+            );
+
+
+            setTimeout(
+                function() {
+
+                    document
+                        .getElementById("loadingScreen")
+                        .classList.add("hide");
+
+                },
+                450
+            );
+
+        }
+
+
+        /* =========================================================
+           SUPABASE AUTH STATE
+           ========================================================= */
+
+        async function setupAuthListener() {
+
+            try {
+
+                if (
+                    typeof supabaseClient !== "undefined" &&
+                    supabaseClient.auth
+                ) {
+
+                    supabaseClient.auth.onAuthStateChange(
+                        function(event, session) {
+
+                            if (session?.user) {
+
+                                currentUser =
+                                    session.user;
+
+                                updateUserUI();
+
+                            }
+
+                        }
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.log(
+                    "Auth listener unavailable:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           START
+        ========================================================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            async function() {
+
+                refreshIcons();
+
+                await setupAuthListener();
+
+                await loadDashboard();
+
+            }
+        );
+
+    </script>
+
+    <!--
+    ================================================================
+    IMPORTANT FOR YOUR PROJECT
+    ================================================================
+
+    1. Is file ko dashboard.html ke naam se save kar.
+
+    2. Existing supabase.js same folder me rehne de.
+
+    3. IMPORTANT:
+       Agar tumhara existing supabase.js ye banata hai:
+
+       const supabaseClient = ...
+
+       to ye dashboard usko automatically use karega.
+
+    4. Browser REFRESH issue:
+       Sidebar ke andar ab:
+
+       <a href="artists.html">
+
+       jaisa navigation nahi hai.
+
+       Instead:
+
+       data-section="artists"
+
+       use hua hai.
+
+       Isliye:
+       Dashboard → Artists
+       Artists → Games
+       Games → Map
+       Map → AI
+       AI → Profile
+
+       sab SAME PAGE ke andar change hoga.
+
+    5. URL bhi:
+       dashboard.html#artists
+       dashboard.html#games
+       dashboard.html#map
+       dashboard.html#ai
+
+       ho sakta hai, lekin PAGE RELOAD NAHI HOGA.
+
+    6. Browser Back / Forward bhi kaam karega.
+
+    7. AI section:
+       Existing Flask endpoint:
+
+       /api/ai/generate
+
+       ko call karta hai.
+
+       Agar Flask backend 5000 port par chal raha hai aur
+       dashboard Live Server 5500 par open hai, to AI request
+       ke liye backend URL ko change karna padega:
+
+       fetch("http://127.0.0.1:5000/api/ai/generate", ...)
+
+       Agar dashboard Flask se hi serve ho raha hai, current:
+
+       fetch("/api/ai/generate", ...)
+
+       sahi hai.
+
+    8. Cultural Map:
+       Google Maps embed use hua hai.
+       Isme user page ke andar hi locations switch kar
+       sakta hai without dashboard reload.
+
+    9. Artists:
+       Multiple Indian art/craft traditions included.
+
+    10. Games:
+        Culture Quiz, Heritage, Festivals, Languages,
+        Art Detective aur Story modules ka UI ready hai.
+
+    11. IMPORTANT:
+        Stats / XP / badges abhi 0 hain because unko actual
+        Supabase tables se connect karna hoga. Maine fake
+        progress numbers nahi lagaye.
+
+    ================================================================
+    -->
+
+</body>
+</html>
