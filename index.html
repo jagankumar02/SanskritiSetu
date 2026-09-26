@@ -21,52 +21,58 @@
         }
 
         :root {
-            --bg: #f4f1eb;
-            --surface: #fffdf8;
-            --text: #211c25;
-            --muted: #756d73;
-            --border: #ded6cd;
-            --primary: #6b4f8a;
-            --primary-dark: #53386f;
-            --dark: #211c25;
+            --text: #ffffff;
+            --text-soft: rgba(255,255,255,.86);
+            --text-muted: rgba(255,255,255,.68);
+
+            --gold: #e4b765;
+            --gold-light: #f0cf8a;
+
+            --glass: rgba(255,255,255,.075);
+            --glass-hover: rgba(255,255,255,.115);
+            --glass-border: rgba(255,255,255,.18);
+
+            --dark: #11151c;
         }
 
         html {
             scroll-behavior: smooth;
         }
 
-
-        body::before,
-        body::after {
-            content: "";
-            position: fixed;
-            width: 360px;
-            height: 360px;
-            border-radius: 50%;
-            pointer-events: none;
-            filter: blur(90px);
-            opacity: .13;
-            z-index: -1;
-        }
-
-        body::before {
-            background: #b78645;
-            top: -120px;
-            left: -120px;
-        }
-
-        body::after {
-            background: #6b4f8a;
-            right: -140px;
-            bottom: 8%;
-        }
-
-
         body {
             font-family: "Plus Jakarta Sans", sans-serif;
-            background: var(--bg);
             color: var(--text);
             overflow-x: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(7,10,15,.62),
+                    rgba(10,14,21,.40),
+                    rgba(8,11,16,.56)
+                ),
+                url("background_img.png") center center / cover fixed no-repeat;
+        }
+
+        /* Soft cinematic overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+
+            background:
+                radial-gradient(
+                    circle at 15% 20%,
+                    rgba(228,183,101,.10),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 85% 75%,
+                    rgba(86,112,145,.12),
+                    transparent 30%
+                );
         }
 
         a {
@@ -74,55 +80,88 @@
             color: inherit;
         }
 
+
+        /* =========================================
+           NAVBAR
+        ========================================= */
+
         .navbar {
             width: min(1180px, calc(100% - 40px));
             margin: 20px auto;
             height: 70px;
-            background: rgba(255,253,248,.90);
-            backdrop-filter: blur(18px);
-            border: 1px solid var(--border);
+
+            background: rgba(15,19,26,.48);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+
+            border: 1px solid rgba(255,255,255,.15);
             border-radius: 18px;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             padding: 0 20px;
+
             position: sticky;
             top: 16px;
             z-index: 100;
+
+            box-shadow:
+                0 12px 35px rgba(0,0,0,.20),
+                inset 0 1px 0 rgba(255,255,255,.08);
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 11px;
+
             font-weight: 800;
             font-size: 20px;
+            color: white;
         }
 
         .logo {
             width: 40px;
             height: 40px;
             border-radius: 12px;
+
             display: grid;
             place-items: center;
-            color: white;
+
+            color: #15110b;
             font-size: 20px;
             font-weight: 800;
-            background: linear-gradient(135deg, #6b4f8a, #b78645);
-            box-shadow: 0 8px 20px rgba(107,79,138,.25);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f1d28f,
+                    #c99545
+                );
+
+            box-shadow:
+                0 8px 24px rgba(207,157,74,.22);
         }
 
         .nav-links {
             display: flex;
             align-items: center;
             gap: 30px;
-            color: #475467;
+
+            color: rgba(255,255,255,.72);
+
             font-size: 14px;
             font-weight: 600;
         }
 
+        .nav-links a {
+            transition: .2s ease;
+        }
+
         .nav-links a:hover {
-            color: var(--primary);
+            color: var(--gold-light);
         }
 
         .nav-actions {
@@ -130,42 +169,85 @@
             gap: 10px;
         }
 
+
+        /* =========================================
+           BUTTONS
+        ========================================= */
+
         .btn {
             border: none;
             cursor: pointer;
+
             font-family: inherit;
             font-weight: 700;
+
             border-radius: 11px;
             padding: 12px 18px;
-            transition: .2s ease;
+
+            transition: .25s ease;
         }
 
         .btn-outline {
-            background: white;
-            border: 1px solid var(--border);
+            color: white;
+
+            background: rgba(255,255,255,.07);
+
+            border: 1px solid rgba(255,255,255,.20);
+
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .btn-outline:hover {
-            border-color: var(--primary);
-            color: var(--primary);
+            background: rgba(255,255,255,.13);
+            border-color: rgba(240,207,138,.60);
+
+            color: var(--gold-light);
+
+            transform: translateY(-2px);
         }
 
         .btn-primary {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 8px 20px rgba(107,79,138,.20);
+            color: #17120b;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f1d28f,
+                    #d5a653
+                );
+
+            box-shadow:
+                0 10px 28px rgba(213,166,83,.20);
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
+            background:
+                linear-gradient(
+                    135deg,
+                    #f6dc9d,
+                    #e0b665
+                );
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 14px 32px rgba(213,166,83,.30);
         }
+
+
+        /* =========================================
+           HERO
+        ========================================= */
 
         .hero {
             width: min(1180px, calc(100% - 40px));
+
             margin: 70px auto 100px;
+
             display: grid;
             grid-template-columns: 1.05fr .95fr;
+
             align-items: center;
             gap: 70px;
         }
@@ -174,41 +256,80 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+
             padding: 8px 12px;
+
             border-radius: 30px;
-            background: #ebe2f2;
-            color: #5c4275;
+
+            background: rgba(255,255,255,.08);
+
+            border: 1px solid rgba(255,255,255,.15);
+
+            color: rgba(255,255,255,.88);
+
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+
             font-size: 12px;
             font-weight: 800;
+
             margin-bottom: 22px;
         }
 
         .dot {
             width: 7px;
             height: 7px;
+
             border-radius: 50%;
-            background: var(--primary);
+
+            background: var(--gold-light);
+
+            box-shadow:
+                0 0 12px rgba(240,207,138,.70);
         }
 
         h1 {
+            color: white;
+
             font-size: clamp(42px, 6vw, 70px);
+
             line-height: 1.04;
             letter-spacing: -3px;
+
             margin-bottom: 24px;
+
+            text-shadow:
+                0 5px 25px rgba(0,0,0,.35);
         }
 
         .gradient-text {
-            background: linear-gradient(90deg, #6b4f8a, #b78645, #9b6b86);
+            background:
+                linear-gradient(
+                    90deg,
+                    #ffffff 0%,
+                    #f1d28f 55%,
+                    #d7aa5c 100%
+                );
+
             -webkit-background-clip: text;
+            background-clip: text;
+
             color: transparent;
         }
 
         .hero p {
-            color: var(--muted);
+            color: var(--text-soft);
+
             line-height: 1.8;
+
             font-size: 16px;
+
             max-width: 570px;
+
             margin-bottom: 30px;
+
+            text-shadow:
+                0 2px 12px rgba(0,0,0,.35);
         }
 
         .hero-buttons {
@@ -217,186 +338,444 @@
             flex-wrap: wrap;
         }
 
+
+        /* =========================================
+           CULTURAL IMAGE SHOWCASE
+        ========================================= */
+
         .hero-card {
-            background: var(--dark);
+            background: rgba(10,13,18,.30);
+
             border-radius: 28px;
-            padding: 22px;
+
+            padding: 10px;
+
             min-height: 440px;
+
             position: relative;
             overflow: hidden;
-            box-shadow: 0 30px 70px rgba(33,28,37,.18);
+
+            border: 1px solid rgba(255,255,255,.15);
+
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+
+            box-shadow:
+                0 30px 70px rgba(0,0,0,.30),
+                inset 0 1px 0 rgba(255,255,255,.10);
         }
 
         .glow {
             position: absolute;
+
             width: 260px;
             height: 260px;
+
             border-radius: 50%;
-            background: #6b4f8a;
+
+            background: #d5a653;
+
             filter: blur(100px);
-            opacity: .45;
+
+            opacity: .16;
+
             right: -70px;
             top: -70px;
+
+            pointer-events: none;
         }
 
-        .quiz-window {
+        .culture-showcase {
             position: relative;
-            background: rgba(255,255,255,.08);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 20px;
-            padding: 22px;
-            margin-top: 40px;
+
+            width: 100%;
+            height: 416px;
+
+            overflow: hidden;
+
+            border-radius: 22px;
+
+            background: #11151c;
+
+            box-shadow:
+                inset 0 0 0 1px rgba(255,255,255,.10);
+        }
+
+        .culture-slide {
+            position: absolute;
+
+            inset: 0;
+
+            opacity: 0;
+
+            transform: scale(1.04);
+
+            animation: cultureFade 20s infinite;
+        }
+
+        .culture-slide:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .culture-slide:nth-child(2) {
+            animation-delay: 5s;
+        }
+
+        .culture-slide:nth-child(3) {
+            animation-delay: 10s;
+        }
+
+        .culture-slide:nth-child(4) {
+            animation-delay: 15s;
+        }
+
+        .culture-slide img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            display: block;
+
+            filter:
+                saturate(.90)
+                contrast(1.04)
+                brightness(.88);
+        }
+
+        .culture-slide::after {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    to top,
+                    rgba(5,7,10,.82) 0%,
+                    rgba(5,7,10,.30) 43%,
+                    rgba(5,7,10,.02) 75%
+                );
+        }
+
+        .culture-caption {
+            position: absolute;
+
+            left: 24px;
+            right: 24px;
+            bottom: 22px;
+
+            z-index: 2;
+
             color: white;
         }
 
-        .window-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
+        .culture-label {
+            display: inline-block;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            background: rgba(255,255,255,.11);
+
+            border: 1px solid rgba(255,255,255,.18);
+
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+
+            color: rgba(255,255,255,.88);
+
+            font-size: 10px;
+            font-weight: 800;
+
+            letter-spacing: .5px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 8px;
         }
 
-        .window-title {
-            font-size: 13px;
-            color: #cbd5e1;
+        .culture-caption h3 {
+            color: white;
+
+            font-size: 24px;
+
+            line-height: 1.15;
+
+            margin-bottom: 5px;
+
+            text-shadow:
+                0 3px 12px rgba(0,0,0,.40);
         }
 
-        .timer {
-            background: rgba(255,255,255,.08);
-            padding: 8px 12px;
-            border-radius: 9px;
+        .culture-caption p {
+            margin: 0;
+
+            color: rgba(255,255,255,.76);
+
             font-size: 12px;
+
+            line-height: 1.5;
+
+            max-width: 400px;
         }
 
-        .question-line {
-            width: 82%;
-            height: 13px;
+        .culture-dots {
+            position: absolute;
+
+            right: 22px;
+            top: 22px;
+
+            z-index: 5;
+
+            display: flex;
+            gap: 6px;
+        }
+
+        .culture-dots span {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: rgba(255,255,255,.42);
+        }
+
+        .culture-dots span:first-child {
+            background: #f1d28f;
+
+            width: 20px;
+
             border-radius: 10px;
-            background: rgba(255,255,255,.85);
-            margin-bottom: 12px;
         }
 
-        .question-line.small {
-            width: 55%;
-            opacity: .55;
-            margin-bottom: 25px;
+        @keyframes cultureFade {
+
+            0% {
+                opacity: 0;
+                transform: scale(1.04);
+            }
+
+            5% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            22% {
+                opacity: 1;
+                transform: scale(1.025);
+            }
+
+            27% {
+                opacity: 0;
+                transform: scale(1.04);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.04);
+            }
         }
 
-        .option {
-            border: 1px solid rgba(255,255,255,.12);
-            border-radius: 12px;
-            padding: 14px;
-            margin-top: 10px;
-            color: #dbe3ef;
-            font-size: 13px;
-            background: rgba(255,255,255,.04);
-        }
 
-        .option.selected {
-            border-color: #b78645;
-            background: rgba(107,79,138,.18);
-        }
+        /* =========================================
+           FEATURES
+        ========================================= */
 
         .features {
             width: min(1180px, calc(100% - 40px));
+
             margin: 0 auto 100px;
         }
 
         .section-heading {
             text-align: center;
+
             max-width: 650px;
+
             margin: 0 auto 45px;
         }
 
         .section-heading h2 {
+            color: white;
+
             font-size: 36px;
+
             letter-spacing: -1.5px;
+
             margin-bottom: 12px;
+
+            text-shadow:
+                0 4px 18px rgba(0,0,0,.30);
         }
 
         .section-heading p {
-            color: var(--muted);
+            color: rgba(255,255,255,.70);
+
             line-height: 1.7;
         }
 
         .feature-grid {
             display: grid;
+
             grid-template-columns: repeat(3, 1fr);
+
             gap: 18px;
         }
 
         .feature {
-            background: white;
-            border: 1px solid var(--border);
+            background: rgba(255,255,255,.065);
+
+            border: 1px solid rgba(255,255,255,.15);
+
             border-radius: 20px;
+
             padding: 28px;
-            transition: .2s ease;
+
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+
+            box-shadow:
+                0 12px 35px rgba(0,0,0,.15),
+                inset 0 1px 0 rgba(255,255,255,.07);
+
+            transition: .25s ease;
         }
 
         .feature:hover {
             transform: translateY(-5px);
-            box-shadow: 0 18px 40px rgba(33,28,37,.08);
+
+            background: rgba(255,255,255,.10);
+
+            border-color: rgba(240,207,138,.35);
+
+            box-shadow:
+                0 20px 45px rgba(0,0,0,.25),
+                inset 0 1px 0 rgba(255,255,255,.10);
         }
 
         .feature-icon {
             width: 46px;
             height: 46px;
+
             border-radius: 13px;
+
             display: grid;
             place-items: center;
-            background: #eee6f3;
-            color: var(--primary);
+
+            background:
+                rgba(228,183,101,.13);
+
+            border: 1px solid rgba(228,183,101,.20);
+
+            color: var(--gold-light);
+
             font-size: 21px;
+
             margin-bottom: 18px;
         }
 
         .feature h3 {
+            color: white;
+
             font-size: 17px;
+
             margin-bottom: 9px;
         }
 
         .feature p {
-            color: var(--muted);
+            color: rgba(255,255,255,.68);
+
             line-height: 1.7;
+
             font-size: 13px;
         }
 
+
+        /* =========================================
+           CTA
+        ========================================= */
+
         .cta {
             width: min(1180px, calc(100% - 40px));
+
             margin: 0 auto 60px;
-            background: var(--dark);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255,255,255,.10),
+                    rgba(255,255,255,.055)
+                );
+
             color: white;
+
+            border: 1px solid rgba(255,255,255,.16);
+
             border-radius: 28px;
+
             padding: 60px 30px;
+
             text-align: center;
+
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,.22),
+                inset 0 1px 0 rgba(255,255,255,.08);
         }
 
         .cta h2 {
+            color: white;
+
             font-size: 36px;
+
             margin-bottom: 12px;
         }
 
         .cta p {
-            color: #98a2b3;
+            color: rgba(255,255,255,.68);
+
             margin-bottom: 25px;
         }
 
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
         footer {
-            border-top: 1px solid var(--border);
+            border-top: 1px solid rgba(255,255,255,.12);
+
             padding: 28px 20px;
+
             text-align: center;
-            color: var(--muted);
+
+            color: rgba(255,255,255,.55);
+
             font-size: 12px;
+
+            background: rgba(5,8,12,.18);
         }
 
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
         @media (max-width: 850px) {
+
             .nav-links {
                 display: none;
             }
 
             .hero {
                 grid-template-columns: 1fr;
+
                 margin-top: 50px;
+
                 gap: 45px;
             }
 
@@ -409,7 +788,9 @@
             }
         }
 
+
         @media (max-width: 520px) {
+
             .navbar {
                 width: calc(100% - 24px);
             }
@@ -426,7 +807,16 @@
 
             .hero-card {
                 min-height: 370px;
-                padding: 14px;
+
+                padding: 8px;
+            }
+
+            .culture-showcase {
+                height: 350px;
+            }
+
+            .culture-caption h3 {
+                font-size: 20px;
             }
 
             .cta h2,
@@ -440,25 +830,51 @@
 <body>
 
 <nav class="navbar">
+
     <a href="index.html" class="brand">
-        <div class="logo">सं</div>
-        <span>SanskritiSetu</span>
+
+        <div class="logo">
+            सं
+        </div>
+
+        <span>
+            SanskritiSetu
+        </span>
+
     </a>
 
+
     <div class="nav-links">
-        <a href="#features">Explore</a>
-        <a href="#how">Our Vision</a>
+
+        <a href="#features">
+            Explore
+        </a>
+
+        <a href="#how">
+            Our Vision
+        </a>
+
     </div>
 
+
     <div class="nav-actions">
-        <button class="btn btn-outline" onclick="location.href='login.html'">
+
+        <button
+            class="btn btn-outline"
+            onclick="location.href='login.html'"
+        >
             Login
         </button>
 
-        <button class="btn btn-primary" onclick="location.href='login.html?mode=signup'">
+        <button
+            class="btn btn-primary"
+            onclick="location.href='login.html?mode=signup'"
+        >
             Get Started
         </button>
+
     </div>
+
 </nav>
 
 
@@ -467,23 +883,38 @@
 <section class="hero">
 
     <div>
+
         <div class="badge">
+
             <span class="dot"></span>
+
             Explore India. Connect With Culture.
+
         </div>
 
+
         <h1>
+
             Discover India.<br>
-            <span class="gradient-text">Connect deeper.</span>
+
+            <span class="gradient-text">
+                Connect deeper.
+            </span>
+
         </h1>
 
+
         <p>
+
             SanskritiSetu helps young learners discover India's
             rich heritage through stories, artists, traditions, festivals,
             interactive games and AI-powered cultural exploration.
+
         </p>
 
+
         <div class="hero-buttons">
+
             <button
                 class="btn btn-primary"
                 onclick="location.href='login.html?mode=signup'"
@@ -491,103 +922,235 @@
                 Start Exploring →
             </button>
 
+
             <button
                 class="btn btn-outline"
                 onclick="document.getElementById('features').scrollIntoView()"
             >
                 Explore Culture
             </button>
+
         </div>
+
     </div>
 
 
+    <!-- CULTURAL IMAGE SHOWCASE -->
+
     <div class="hero-card">
+
         <div class="glow"></div>
 
-        <div class="quiz-window">
 
-            <div class="window-top">
-                <span class="window-title">
-                    Cultural Discovery
-                </span>
+        <div class="culture-showcase">
 
-                <span class="timer">
-                    Cultural Games
-                </span>
+            <div class="culture-dots">
+
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+
             </div>
 
-            <div class="question-line"></div>
-            <div class="question-line small"></div>
 
-            <div class="option selected">
-                A &nbsp; Discover regional traditions
+            <!-- TAJ MAHAL -->
+
+            <div class="culture-slide">
+
+                <img
+                    src="taj_mahal.jpg"
+                    alt="Taj Mahal"
+                >
+
+
+                <div class="culture-caption">
+
+                    <span class="culture-label">
+                        India · Heritage
+                    </span>
+
+                    <h3>
+                        Taj Mahal
+                    </h3>
+
+                    <p>
+                        A timeless symbol of India's architectural heritage.
+                    </p>
+
+                </div>
+
             </div>
 
-            <div class="option">
-                B &nbsp; Meet traditional artists
+
+            <!-- HAMPI -->
+
+            <div class="culture-slide">
+
+                <img
+                    src="hampi.jpg"
+                    alt="Virupaksha Temple, Hampi"
+                >
+
+
+                <div class="culture-caption">
+
+                    <span class="culture-label">
+                        Karnataka · History
+                    </span>
+
+                    <h3>
+                        Hampi
+                    </h3>
+
+                    <p>
+                        Ancient temples and ruins reflecting the legacy
+                        of the Vijayanagara era.
+                    </p>
+
+                </div>
+
             </div>
 
-            <div class="option">
-                C &nbsp; Explore cultural maps
+
+            <!-- KONARK -->
+
+            <div class="culture-slide">
+
+                <img
+                    src="konark.webp"
+                    alt="Konark Sun Temple"
+                >
+
+
+                <div class="culture-caption">
+
+                    <span class="culture-label">
+                        Odisha · Architecture
+                    </span>
+
+                    <h3>
+                        Konark Sun Temple
+                    </h3>
+
+                    <p>
+                        An extraordinary monument inspired by the
+                        chariot of the Sun God.
+                    </p>
+
+                </div>
+
             </div>
 
-            <div class="option">
-                D &nbsp; Learn through stories & games
+
+            <!-- VARANASI -->
+
+            <div class="culture-slide">
+
+                <img
+                    src="varanasi.jpg"
+                    alt="Varanasi Ghats"
+                >
+
+
+                <div class="culture-caption">
+
+                    <span class="culture-label">
+                        Uttar Pradesh · Tradition
+                    </span>
+
+                    <h3>
+                        Varanasi Ghats
+                    </h3>
+
+                    <p>
+                        A living cultural landscape shaped by centuries
+                        of traditions.
+                    </p>
+
+                </div>
+
             </div>
 
         </div>
+
     </div>
 
 </section>
 
 
+<!-- FEATURES -->
+
 <section class="features" id="features">
 
     <div class="section-heading">
-        <h2>Everything you need to explore</h2>
+
+        <h2>
+            Everything you need to explore
+        </h2>
 
         <p>
             One engaging platform to discover India's heritage,
             traditions, artists, festivals and local stories.
         </p>
+
     </div>
 
 
     <div class="feature-grid">
 
-        <article class="feature">
-            <div class="feature-icon">✦</div>
 
-            <h3>AI Cultural Guide</h3>
+        <article class="feature">
+
+            <div class="feature-icon">
+                ✦
+            </div>
+
+            <h3>
+                AI Cultural Guide
+            </h3>
 
             <p>
                 Ask questions about Indian traditions, festivals,
                 art, history and cultural practices in a simple way.
             </p>
+
         </article>
 
 
         <article class="feature">
-            <div class="feature-icon">✓</div>
 
-            <h3>Cultural Games</h3>
+            <div class="feature-icon">
+                ✓
+            </div>
+
+            <h3>
+                Cultural Games
+            </h3>
 
             <p>
                 Learn through interactive quizzes, challenges and
                 games designed to make culture engaging.
             </p>
+
         </article>
 
 
         <article class="feature">
-            <div class="feature-icon">↗</div>
 
-            <h3>Cultural Map</h3>
+            <div class="feature-icon">
+                ↗
+            </div>
+
+            <h3>
+                Cultural Map
+            </h3>
 
             <p>
                 Explore India's diverse traditions, places, artists
                 and cultural highlights through an interactive map.
             </p>
+
         </article>
 
     </div>
@@ -595,14 +1158,19 @@
 </section>
 
 
+<!-- CTA -->
+
 <section class="cta" id="how">
 
-    <h2>Ready to discover India's heritage?</h2>
+    <h2>
+        Ready to discover India's heritage?
+    </h2>
 
     <p>
         Create your account and begin your personalized
         journey through India's rich cultural heritage.
     </p>
+
 
     <button
         class="btn btn-primary"
@@ -617,8 +1185,12 @@
 
 
 <footer>
+
     © 2026 SanskritiSetu · Connecting Youth With India's Culture.
+
 </footer>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
 
