@@ -16,6 +16,7 @@
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="supabase.js"></script>
 
     <style>
         :root {
@@ -2125,46 +2126,162 @@
            USER PROFILE DATA
         ========================================================= */
 
-        function getProfileData() {
+        let profileDataFromDB = null;
 
-            const metadata =
-                currentUser?.user_metadata || {};
 
-            return {
+/* =========================================================
+   LOAD USER PROFILE FROM SUPABASE
+========================================================= */
 
-                fullName:
-                    metadata.full_name ||
-                    currentUser?.email?.split("@")[0] ||
-                    "Explorer",
+async function loadUserProfile() {
 
-                email:
-                    currentUser?.email ||
-                    "Not available",
+    try {
 
-                state:
-                    metadata.state ||
-                    "Not selected",
+        if (!currentUser?.id) {
+            console.warn("No logged-in user found.");
+            return null;
+        }
 
-                city:
-                    metadata.city ||
-                    "Not selected",
 
-                interests:
-                    metadata.interests ||
-                    "Culture & Heritage",
+        if (
+            typeof supabaseClient === "undefined" ||
+            !supabaseClient
+        ) {
+            console.error("Supabase client not available.");
+            return null;
+        }
 
-                profession:
-                    metadata.profession ||
-                    "Cultural Explorer",
 
-                language:
-                    metadata.preferred_language ||
-                    metadata.language ||
-                    "English"
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("sanskriti_profiles")
+            .select(`
+                id,
+                user_id,
+                full_name,
+                email,
+                state,
+                city,
+                interests,
+                profession,
+                preferred_language,
+                created_at
+            `)
+            .eq("user_id", currentUser.id)
+            .maybeSingle();
 
-            };
+
+        if (error) {
+
+            console.error(
+                "Profile fetch error:",
+                error
+            );
+
+            return null;
 
         }
+
+
+        if (data) {
+
+            profileDataFromDB = data;
+
+            console.log(
+                "SanskritiSetu profile loaded:",
+                data
+            );
+
+            return data;
+
+        }
+
+
+        console.warn(
+            "No SanskritiSetu profile found for this user."
+        );
+
+        return null;
+
+
+    } catch (error) {
+
+        console.error(
+            "Unexpected profile loading error:",
+            error
+        );
+
+        return null;
+
+    }
+
+}
+
+
+/* =========================================================
+   GET PROFILE DATA
+========================================================= */
+
+function getProfileData() {
+
+    const metadata =
+        currentUser?.user_metadata || {};
+
+
+    const databaseProfile =
+        profileDataFromDB || {};
+
+
+    return {
+
+        fullName:
+            databaseProfile.full_name ||
+            metadata.full_name ||
+            currentUser?.email?.split("@")[0] ||
+            "Explorer",
+
+
+        email:
+            databaseProfile.email ||
+            currentUser?.email ||
+            "Not available",
+
+
+        state:
+            databaseProfile.state ||
+            metadata.state ||
+            "Not selected",
+
+
+        city:
+            databaseProfile.city ||
+            metadata.city ||
+            "Not selected",
+
+
+        interests:
+            databaseProfile.interests ||
+            metadata.interests ||
+            "Culture & Heritage",
+
+
+        profession:
+            databaseProfile.profession ||
+            metadata.profession ||
+            "Cultural Explorer",
+
+
+        language:
+            databaseProfile.preferred_language ||
+            metadata.preferred_language ||
+            metadata.language ||
+            "English"
+
+    };
+
+}
 
 
         /* =========================================================
@@ -4906,43 +5023,55 @@ Rules:
            SUPABASE AUTH STATE
            ========================================================= */
 
-        async function setupAuthListener() {
+       /* =========================================================
+   SUPABASE AUTH STATE
+========================================================= */
 
-            try {
+async function setupAuthListener() {
 
-                if (
-                    typeof supabaseClient !== "undefined" &&
-                    supabaseClient.auth
-                ) {
+    try {
 
-                    supabaseClient.auth.onAuthStateChange(
-                        function(event, session) {
+        if (
+            typeof supabaseClient !== "undefined" &&
+            supabaseClient.auth
+        ) {
 
-                            if (session?.user) {
+            supabaseClient.auth.onAuthStateChange(
+                async function(event, session) {
 
-                                currentUser =
-                                    session.user;
+                    if (session?.user) {
 
-                                updateUserUI();
+                        currentUser =
+                            session.user;
 
-                            }
 
-                        }
-                    );
+                        /*
+                            Auth user change hone par
+                            latest profile bhi fetch karo.
+                        */
+
+                        await loadUserProfile();
+
+
+                        updateUserUI();
+
+                    }
 
                 }
-
-            } catch (error) {
-
-                console.log(
-                    "Auth listener unavailable:",
-                    error
-                );
-
-            }
+            );
 
         }
 
+    } catch (error) {
+
+        console.log(
+            "Auth listener unavailable:",
+            error
+        );
+
+    }
+
+}
 
         /* =========================================================
            START
